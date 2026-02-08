@@ -26,7 +26,7 @@ const initialClaim: ClaimState = {
     harian: { bil: 0, hari: 0, kadar: KADAR_MAKAN.HARIAN },
   },
   lodgings: [],
-  misc: { telefon: 0, pos: 0, dobi: 0, airportTax: 0, lebihanBagasi: 0, parking: 0, tol: 0 },
+  misc: { telefon: 0, pos: 0, dobi: 0, airportTax: 0, lebihanBagasi: 0, parking: 0, tol: 0, saringan: 0, kemasukanPremis: 0 },
   advance: 0
 };
 
@@ -105,7 +105,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen pb-32 bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
-      {/* Sidebar for Drafts (Professional clean design) */}
+      {/* Sidebar for Drafts */}
       {isDraftMenuOpen && (
         <div className="fixed inset-0 bg-slate-900/20 z-[100] flex justify-end no-print backdrop-blur-[2px]">
           <div className="w-80 bg-white h-full shadow-2xl flex flex-col animate-slideLeft border-l border-slate-100">

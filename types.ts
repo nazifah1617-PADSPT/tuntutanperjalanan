@@ -69,6 +69,8 @@ export interface MiscExpenses {
   lebihanBagasi: number;
   parking: number;
   tol: number;
+  saringan: number;
+  kemasukanPremis: number;
 }
 
 export interface ClaimState {
