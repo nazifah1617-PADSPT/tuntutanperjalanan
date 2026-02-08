@@ -28,12 +28,16 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
     onChange(logs.map(j => {
       if (j.id === id) {
         const updatedLeg = { ...j[legType], [field]: value };
-        // Sync 'ke' pergi dengan 'dari' balik secara automatik
-        let updatedBalik = j.balik;
+        
+        // Cipta objek kemas kini asas
+        const updates: any = { [legType]: updatedLeg };
+
+        // Logik Tambahan: Jika kemas kini destinasi 'pergi', automatik kemas kini punca 'balik'
         if (legType === 'pergi' && field === 'ke') {
-          updatedBalik = { ...j.balik, dari: value };
+          updates.balik = { ...j.balik, dari: value };
         }
-        return { ...j, [legType]: updatedLeg, balik: updatedBalik };
+
+        return { ...j, ...updates };
       }
       return j;
     }));
