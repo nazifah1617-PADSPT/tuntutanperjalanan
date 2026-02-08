@@ -26,69 +26,67 @@ export default function Auth({ onLoginSuccess }: Props) {
       }
       onLoginSuccess();
     } catch (err: any) {
-      setError(err.message.includes('auth/user-not-found') ? 'Emel tidak ditemui.' : 
-                err.message.includes('auth/wrong-password') ? 'Kata laluan salah.' : 
-                err.message.includes('auth/email-already-in-use') ? 'Emel sudah didaftarkan.' : 
-                'Ralat akses. Sila cuba lagi.');
+      setError('E-mel atau kata laluan tidak sah.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-10 border border-gray-100">
-        <div className="text-center mb-10">
-          <div className="bg-blue-900 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-200">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-          </div>
-          <h1 className="text-2xl font-black uppercase italic tracking-tighter text-blue-900">e-Tuntutan WP1.4</h1>
-          <p className="text-gray-400 text-sm font-medium mt-1">{isLogin ? 'Log masuk ke akaun anda' : 'Daftar akaun baru'}</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-xs font-bold border border-red-100 animate-shake">
-              {error}
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+      <div className="max-w-md w-full">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-10 md:p-12">
+          <div className="text-center mb-10">
+            <div className="bg-slate-900 w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-6">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
             </div>
-          )}
-
-          <div className="space-y-1">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Alamat Emel</label>
-            <input 
-              type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-gray-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl p-4 outline-none transition-all font-medium"
-              placeholder="nama@email.com"
-            />
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">Tuntutan Perjalanan</h1>
+            <p className="text-slate-400 text-[11px] font-bold uppercase tracking-[0.2em] mt-2">Sistem Pengurusan WP 1.4</p>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Kata Laluan</label>
-            <input 
-              type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-gray-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl p-4 outline-none transition-all font-medium"
-              placeholder="••••••••"
-            />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-50 text-red-600 p-4 rounded-lg text-xs font-bold border border-red-100 text-center">
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">E-mel Rasmi</label>
+              <input 
+                type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-white border border-slate-200 focus:border-slate-900 rounded-lg p-3 outline-none transition-all text-sm font-medium"
+                placeholder="emel@jabatan.gov.my"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Kata Laluan</label>
+              <input 
+                type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-white border border-slate-200 focus:border-slate-900 rounded-lg p-3 outline-none transition-all text-sm font-medium"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <button 
+              type="submit" disabled={loading}
+              className={`w-full py-3.5 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${loading ? 'bg-slate-200 text-slate-400' : 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-900/10'}`}
+            >
+              {loading ? 'Sila Tunggu...' : isLogin ? 'Log Masuk' : 'Daftar Akaun'}
+            </button>
+          </form>
+
+          <div className="mt-8 text-center">
+            <button 
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-[10px] font-bold text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors"
+            >
+              {isLogin ? 'Tiada Akaun? Daftar Sini' : 'Sudah Berdaftar? Log Masuk'}
+            </button>
           </div>
-
-          <button 
-            type="submit" disabled={loading}
-            className={`w-full py-4 rounded-2xl font-black text-white shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-100'}`}
-          >
-            {loading ? (
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            ) : isLogin ? 'LOG MASUK' : 'DAFTAR SEKARANG'}
-          </button>
-        </form>
-
-        <div className="mt-8 text-center">
-          <button 
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-xs font-bold text-blue-600 hover:underline uppercase tracking-widest"
-          >
-            {isLogin ? 'Belum ada akaun? Daftar sini' : 'Sudah ada akaun? Log masuk'}
-          </button>
         </div>
+        <p className="text-center text-slate-300 text-[10px] font-bold uppercase tracking-[0.2em] mt-8 italic">© 2025 Portal Tuntutan WP 1.4 Digital</p>
       </div>
     </div>
   );

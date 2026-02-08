@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { OfficerInfo } from './types';
 
@@ -13,135 +14,105 @@ const Step1OfficerInfo: React.FC<Props> = ({ info, onChange }) => {
     onChange({ [name]: val });
   };
 
+  const GroupHeader = ({ title }: { title: string }) => (
+    <div className="flex items-center gap-4 mb-8">
+      <h3 className="text-sm font-black text-slate-800 uppercase tracking-[0.15em] whitespace-nowrap">{title}</h3>
+      <div className="h-px bg-slate-200 w-full"></div>
+    </div>
+  );
+
+  const InputLabel = ({ label }: { label: string }) => (
+    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">{label}</label>
+  );
+
+  const inputStyles = "w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 rounded-lg p-3 outline-none transition-all text-sm font-medium text-slate-700 placeholder-slate-300";
+
   return (
-    <div className="space-y-8 animate-fadeIn">
-      <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">Maklumat Pegawai</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Nama (Huruf Besar)</label>
-            <input 
-              name="nama" value={info.nama} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none uppercase font-semibold" 
-              placeholder="CONTOH: AHMAD HAFIZAN BIN ABD HALIM"
-            />
+    <div className="animate-fadeIn space-y-16">
+      <section>
+        <GroupHeader title="Profil Perkhidmatan" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div className="md:col-span-2">
+            <InputLabel label="Nama Penuh (Seperti Dalam Kad Pengenalan)" />
+            <input name="nama" value={info.nama} onChange={handleChange} className={`${inputStyles} uppercase font-bold`} placeholder="NAMA PENUH" />
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">No. Kad Pengenalan</label>
-            <input 
-              name="ic" value={info.ic} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
-              placeholder="830316-07-5029"
-            />
+          <div>
+            <InputLabel label="No. Kad Pengenalan" />
+            <input name="ic" value={info.ic} onChange={handleChange} className={inputStyles} placeholder="000000-00-0000" />
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Jawatan</label>
-            <input 
-              name="jawatan" value={info.jawatan} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" 
-              placeholder="PEMBANTU HAL EHWAL ISLAM"
-            />
+          <div>
+            <InputLabel label="Gred Jawatan" />
+            <input name="gred" value={info.gred} onChange={handleChange} className={inputStyles} placeholder="CONTOH: DG41 / N19" />
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Gred</label>
-            <input 
-              name="gred" value={info.gred} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" 
-              placeholder="S19"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">No. Akaun Bank</label>
-            <input 
-              name="akaunBank" value={info.akaunBank} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Nama / Alamat Bank</label>
-            <input 
-              name="namaBank" value={info.namaBank} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" 
-              placeholder="MAYBANK ISLAMIC"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">No. Telefon (Pejabat/Bimbit)</label>
-            <input 
-              name="telefon" value={info.telefon} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" 
-            />
+          <div>
+            <InputLabel label="Jawatan Rasmi" />
+            <input name="jawatan" value={info.jawatan} onChange={handleChange} className={inputStyles} placeholder="JAWATAN SEMASA" />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-500 uppercase">Gaji Hakiki (RM)</label>
-              <input 
-                type="number" name="gaji" value={info.gaji} onChange={handleChange}
-                className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-right font-bold" 
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-500 uppercase">Elaun-elaun (RM)</label>
-              <input 
-                type="number" name="elaun" value={info.elaun} onChange={handleChange}
-                className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-right font-bold" 
-              />
-            </div>
+             <div>
+                <InputLabel label="Gaji Pokok (RM)" />
+                <input type="number" name="gaji" value={info.gaji} onChange={handleChange} className={`${inputStyles} text-right`} />
+             </div>
+             <div>
+                <InputLabel label="Elaun Tetap (RM)" />
+                <input type="number" name="elaun" value={info.elaun} onChange={handleChange} className={`${inputStyles} text-right`} />
+             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">Maklumat Kenderaan</h2>
+      <section>
+        <GroupHeader title="Maklumat Pembayaran & Perhubungan" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div>
+            <InputLabel label="Nama Bank & Cawangan" />
+            <input name="namaBank" value={info.namaBank} onChange={handleChange} className={inputStyles} placeholder="CONTOH: MAYBANK BERHAD" />
+          </div>
+          <div>
+            <InputLabel label="Nombor Akaun Bank" />
+            <input name="akaunBank" value={info.akaunBank} onChange={handleChange} className={inputStyles} placeholder="NOMBOR AKAUN" />
+          </div>
+          <div>
+            <InputLabel label="No. Telefon Bimbit" />
+            <input name="telefon" value={info.telefon} onChange={handleChange} className={inputStyles} placeholder="01X-XXXXXXX" />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <GroupHeader title="Butiran Kenderaan" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Jenis Kenderaan</label>
-            <select 
-              name="kenderaanJenis" value={info.kenderaanJenis} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none"
-            >
+          <div>
+            <InputLabel label="Jenis Kenderaan" />
+            <select name="kenderaanJenis" value={info.kenderaanJenis} onChange={handleChange} className={`${inputStyles} bg-slate-50/50`}>
               <option value="Kereta">Kereta</option>
               <option value="Motosikal">Motosikal</option>
             </select>
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Jenis / Model</label>
-            <input 
-              name="kenderaanModel" value={info.kenderaanModel} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" 
-              placeholder="PRODUA/AXIA"
-            />
+          <div>
+            <InputLabel label="Model / Jenama" />
+            <input name="kenderaanModel" value={info.kenderaanModel} onChange={handleChange} className={inputStyles} placeholder="MODEL KENDERAAN" />
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">No. Pendaftaran</label>
-            <input 
-              name="noPendaftaran" value={info.noPendaftaran} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none uppercase font-bold" 
-              placeholder="PNP4264"
-            />
+          <div>
+            <InputLabel label="No. Pendaftaran" />
+            <input name="noPendaftaran" value={info.noPendaftaran} onChange={handleChange} className={`${inputStyles} uppercase font-bold`} placeholder="PLAT NO" />
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">Alamat</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Alamat Pejabat</label>
-            <textarea 
-              name="alamatPejabat" value={info.alamatPejabat} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none h-32" 
-            />
+      <section>
+        <GroupHeader title="Maklumat Alamat" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <InputLabel label="Alamat Pejabat Rasmi" />
+            <textarea name="alamatPejabat" value={info.alamatPejabat} onChange={handleChange} className={`${inputStyles} h-28 resize-none`} placeholder="ALAMAT TEMPAT BERTUGAS" />
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">Alamat Rumah Pegawai</label>
-            <textarea 
-              name="alamatRumah" value={info.alamatRumah} onChange={handleChange}
-              className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none h-32" 
-            />
+          <div>
+            <InputLabel label="Alamat Kediaman" />
+            <textarea name="alamatRumah" value={info.alamatRumah} onChange={handleChange} className={`${inputStyles} h-28 resize-none`} placeholder="ALAMAT RUMAH" />
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

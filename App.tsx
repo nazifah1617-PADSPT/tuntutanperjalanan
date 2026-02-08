@@ -30,7 +30,13 @@ const initialClaim: ClaimState = {
   advance: 0
 };
 
-const STEPS = ['Pegawai', 'Log', 'Bhg A', 'Bhg B', 'Rumusan'];
+const STEPS = [
+  { label: 'Maklumat Pegawai', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+  { label: 'Log Perjalanan', icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 8V9' },
+  { label: 'Bahagian A', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { label: 'Bahagian B', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+  { label: 'Rumusan', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' }
+];
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
@@ -42,7 +48,6 @@ export default function App() {
   const [isDraftMenuOpen, setIsDraftMenuOpen] = useState(false);
   const [allDrafts, setAllDrafts] = useState<Record<string, DraftEntry>>({});
 
-  // 1. Semak status Login
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -51,18 +56,13 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // 2. Ambil data draf selepas login
   useEffect(() => {
     if (user) {
       const initData = async () => {
         setSaveStatus('saving');
         const data = await persistence.fetchDraftsForUser(user.uid);
         setAllDrafts(data);
-        
-        const lastId = Object.keys(data).sort((a, b) => 
-          new Date(data[b].lastUpdated).getTime() - new Date(data[a].lastUpdated).getTime()
-        )[0];
-        
+        const lastId = Object.keys(data).sort((a, b) => new Date(data[b].lastUpdated).getTime() - new Date(data[a].lastUpdated).getTime())[0];
         if (lastId) {
           setCurrentDraftId(lastId);
           setFormData(data[lastId].data);
@@ -73,7 +73,6 @@ export default function App() {
     }
   }, [user]);
 
-  // 3. Auto-Save
   useEffect(() => {
     if (user && (formData.info.nama || formData.logs.length > 0)) {
       setSaveStatus('saving');
@@ -93,27 +92,11 @@ export default function App() {
     setCurrentStep(0);
   };
 
-  const createNewDraft = () => {
-    setCurrentDraftId('draft_' + Date.now());
-    setFormData(initialClaim);
-    setIsDraftMenuOpen(false);
-  };
-
-  const loadDraft = (id: string) => {
-    const draft = allDrafts[id];
-    if (draft) {
-      setCurrentDraftId(id);
-      setFormData(draft.data);
-      setIsDraftMenuOpen(false);
-      setCurrentStep(0);
-    }
-  };
-
   if (authChecking) return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-900">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="text-center">
-        <div className="w-16 h-16 border-4 border-blue-400 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-blue-100 font-bold uppercase tracking-widest text-xs">Memulakan e-Tuntutan...</p>
+        <div className="w-8 h-8 border-2 border-slate-200 border-t-slate-800 rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-slate-500 text-[11px] font-semibold uppercase tracking-widest">Sila Tunggu...</p>
       </div>
     </div>
   );
@@ -121,102 +104,126 @@ export default function App() {
   if (!user) return <Auth onLoginSuccess={() => {}} />;
 
   return (
-    <div className="min-h-screen pb-24 bg-gray-50 flex flex-col">
-      {/* Drawer Menu Draf */}
+    <div className="min-h-screen pb-32 bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
+      {/* Sidebar for Drafts (Professional clean design) */}
       {isDraftMenuOpen && (
-        <div className="fixed inset-0 bg-black/60 z-[100] flex justify-end no-print backdrop-blur-sm">
-          <div className="w-80 bg-white h-full shadow-2xl p-6 overflow-y-auto animate-slideLeft border-l border-gray-100">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="font-black text-xl text-gray-800 uppercase italic tracking-tighter">Draf Perjalanan</h3>
-              <button onClick={() => setIsDraftMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-              </button>
-            </div>
-            
-            <button onClick={createNewDraft} className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold mb-6 hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all active:scale-95 flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
-              Tuntutan Baru
-            </button>
-
-            <div className="space-y-3">
-              {Object.values(allDrafts).sort((a,b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()).map(draft => (
-                <div key={draft.id} onClick={() => loadDraft(draft.id)} className={`p-4 rounded-2xl border-2 transition-all cursor-pointer group ${draft.id === currentDraftId ? 'border-blue-500 bg-blue-50' : 'border-gray-50 bg-white hover:border-blue-200'}`}>
-                  <div className="font-bold text-sm truncate uppercase">{draft.name}</div>
-                  <div className="text-[10px] text-gray-400 mt-1 font-mono">{new Date(draft.lastUpdated).toLocaleString()}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-10 pt-10 border-t">
-              <button onClick={handleLogout} className="w-full bg-red-50 text-red-600 py-4 rounded-2xl font-bold hover:bg-red-100 transition-all flex items-center justify-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                Log Keluar
-              </button>
-            </div>
+        <div className="fixed inset-0 bg-slate-900/20 z-[100] flex justify-end no-print backdrop-blur-[2px]">
+          <div className="w-80 bg-white h-full shadow-xl flex flex-col animate-slideLeft">
+             <div className="p-6 border-b flex justify-between items-center">
+                <h3 className="font-bold text-slate-800">Senarai Draf</h3>
+                <button onClick={() => setIsDraftMenuOpen(false)} className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+             </div>
+             <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                <button onClick={() => { setCurrentDraftId('draft_'+Date.now()); setFormData(initialClaim); setIsDraftMenuOpen(false); }} className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-all">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
+                  Tuntutan Baru
+                </button>
+                {Object.values(allDrafts).sort((a,b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()).map(draft => (
+                  <div key={draft.id} onClick={() => { setCurrentDraftId(draft.id); setFormData(draft.data); setIsDraftMenuOpen(false); setCurrentStep(0); }} className={`p-4 rounded-lg border cursor-pointer transition-all ${draft.id === currentDraftId ? 'border-blue-500 bg-blue-50' : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50'}`}>
+                    <div className="font-bold text-xs text-slate-800 truncate uppercase">{draft.name || 'Draf Tanpa Nama'}</div>
+                    <div className="text-[10px] text-slate-400 mt-1">{new Date(draft.lastUpdated).toLocaleDateString('ms-MY')}</div>
+                  </div>
+                ))}
+             </div>
+             <div className="p-6 border-t">
+                <button onClick={handleLogout} className="w-full py-2.5 text-slate-500 hover:text-red-600 text-xs font-bold uppercase tracking-wider transition-colors border border-slate-200 rounded-lg">
+                   Log Keluar
+                </button>
+             </div>
           </div>
         </div>
       )}
 
-      {/* Header Utama */}
-      <header className="bg-blue-900 text-white p-6 shadow-xl no-print sticky top-0 z-[60]">
-        <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-5">
-            <button onClick={() => setIsDraftMenuOpen(true)} className="bg-blue-800 p-3 rounded-2xl hover:bg-blue-700 border border-blue-700 shadow-inner transition-all">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+      {/* Modern Professional Header */}
+      <header className="bg-white border-b border-slate-200 no-print sticky top-0 z-[60]">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setIsDraftMenuOpen(true)} className="p-2.5 bg-slate-50 text-slate-600 rounded-lg hover:bg-slate-100 border border-slate-200 transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
+            <div className="h-8 w-px bg-slate-200 hidden sm:block mx-2"></div>
             <div>
-              <h1 className="text-xl font-black italic uppercase tracking-tighter">e-Tuntutan <span className="text-blue-400">WP1.4</span></h1>
-              <div className="flex items-center gap-2 mt-1">
-                <div className={`w-2 h-2 rounded-full ${saveStatus === 'saving' ? 'bg-orange-400 animate-pulse' : 'bg-green-400'}`}></div>
-                <span className="text-[10px] text-blue-300 font-black uppercase tracking-widest">
-                  {user.email} • {saveStatus === 'saving' ? 'Menyelaras...' : 'Terselaras'}
+              <h1 className="text-lg font-bold text-slate-900 leading-tight">Tuntutan Perjalanan Dalam Negeri</h1>
+              <div className="flex items-center gap-2">
+                <div className={`w-1.5 h-1.5 rounded-full ${saveStatus === 'saving' ? 'bg-amber-400 animate-pulse' : 'bg-green-500'}`}></div>
+                <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">
+                  {saveStatus === 'saving' ? 'Sedang Menyimpan...' : 'Data Terselaras'}
                 </span>
               </div>
             </div>
           </div>
-          <div className="hidden md:flex flex-col items-end">
-             <span className="text-[10px] font-black uppercase text-blue-300 tracking-tighter">Status Akaun</span>
-             <span className="text-xs font-bold text-white uppercase">Daftar Aktif</span>
+          <div className="flex items-center gap-3">
+             <div className="hidden md:flex flex-col items-end mr-4">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Pengguna Terlog</span>
+                <span className="text-xs font-semibold text-slate-700">{user.email}</span>
+             </div>
+             <div className="bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 hidden sm:block">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">WP 1.4 Digital</span>
+             </div>
           </div>
         </div>
       </header>
 
-      {/* Langkah & Borang */}
-      <main className="max-w-5xl mx-auto px-4 mt-8 flex-grow w-full">
-        <div className="flex justify-center gap-2 mb-10 no-print overflow-x-auto py-2">
-          {STEPS.map((step, idx) => (
-            <div key={idx} className={`flex items-center gap-2 px-4 py-2 rounded-2xl transition-all ${currentStep === idx ? 'bg-blue-600 text-white shadow-lg scale-105' : 'bg-white text-gray-400 border border-gray-100'}`}>
-              <span className="text-sm font-black">{idx + 1}</span>
-              <span className="text-[10px] font-bold uppercase hidden md:inline">{step}</span>
-            </div>
-          ))}
-        </div>
+      {/* Main Content Area */}
+      <main className="max-w-6xl mx-auto w-full px-6 flex-grow mt-8">
+        
+        {/* Clean Stepper */}
+        <nav className="mb-8 no-print overflow-x-auto">
+          <div className="flex items-center justify-between min-w-[700px] border-b border-slate-200">
+            {STEPS.map((step, idx) => (
+              <button 
+                key={idx} 
+                onClick={() => setCurrentStep(idx)}
+                className={`flex items-center gap-3 py-4 border-b-2 transition-all px-2 ${currentStep === idx ? 'border-blue-600 opacity-100' : 'border-transparent opacity-40 hover:opacity-70'}`}
+              >
+                <div className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold ${currentStep === idx ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                  {idx + 1}
+                </div>
+                <span className={`text-xs font-bold uppercase tracking-wide whitespace-nowrap ${currentStep === idx ? 'text-slate-900' : 'text-slate-500'}`}>
+                  {step.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </nav>
 
-        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200 border border-gray-100 p-8 md:p-12 mb-24 min-h-[500px]">
-          {currentStep === 0 && <Step1OfficerInfo info={formData.info} onChange={(i) => setFormData(p => ({ ...p, info: { ...p.info, ...i } }))} />}
-          {currentStep === 1 && <Step2JourneyLog logs={formData.logs} onChange={(l) => setFormData(p => ({ ...p, logs: l }))} />}
-          {currentStep === 2 && <Step3PartA logs={formData.logs} vehicleType={formData.info.kenderaanJenis} transport={formData.transport} meals={formData.meals} onTransportChange={(t) => setFormData(p => ({ ...p, transport: { ...p.transport, ...t } }))} onMealsChange={(m) => setFormData(p => ({ ...p, meals: { ...p.meals, ...m } }))} />}
-          {currentStep === 3 && <Step4PartB lodgings={formData.lodgings} onChange={(l) => setFormData(p => ({ ...p, lodgings: l }))} />}
-          {currentStep === 4 && <Step5Summary data={formData} onMiscChange={(m) => setFormData(p => ({ ...p, misc: { ...p.misc, ...m } }))} onAdvanceChange={(a) => setFormData(p => ({ ...p, advance: a }))} />}
+        {/* Content Card */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-24 min-h-[600px]">
+          <div className="p-8 md:p-12 lg:p-16">
+            {currentStep === 0 && <Step1OfficerInfo info={formData.info} onChange={(i) => setFormData(p => ({ ...p, info: { ...p.info, ...i } }))} />}
+            {currentStep === 1 && <Step2JourneyLog logs={formData.logs} onChange={(l) => setFormData(p => ({ ...p, logs: l }))} />}
+            {currentStep === 2 && <Step3PartA logs={formData.logs} vehicleType={formData.info.kenderaanJenis} transport={formData.transport} meals={formData.meals} onTransportChange={(t) => setFormData(p => ({ ...p, transport: { ...p.transport, ...t } }))} onMealsChange={(m) => setFormData(p => ({ ...p, meals: { ...p.meals, ...m } }))} />}
+            {currentStep === 3 && <Step4PartB lodgings={formData.lodgings} onChange={(l) => setFormData(p => ({ ...p, lodgings: l }))} />}
+            {currentStep === 4 && <Step5Summary data={formData} onMiscChange={(m) => setFormData(p => ({ ...p, misc: { ...p.misc, ...m } }))} onAdvanceChange={(a) => setFormData(p => ({ ...p, advance: a }))} />}
+          </div>
         </div>
       </main>
 
-      {/* Navigasi Bawah */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 p-5 z-50 no-print">
-        <div className="max-w-5xl mx-auto flex justify-between items-center">
+      {/* Professional Footer Controls */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-5 z-50 no-print">
+        <div className="max-w-6xl mx-auto flex justify-between items-center px-4">
           <button 
-            onClick={() => setCurrentStep(p => Math.max(0, p - 1))} 
+            onClick={() => { window.scrollTo(0,0); setCurrentStep(p => Math.max(0, p - 1)); }} 
             disabled={currentStep === 0}
-            className={`px-10 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${currentStep === 0 ? 'text-gray-200 cursor-not-allowed' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${currentStep === 0 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:bg-slate-100'}`}
           >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
             Kembali
           </button>
+          
+          <div className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.3em] hidden sm:block">
+            Langkah {currentStep + 1} daripada {STEPS.length}
+          </div>
+
           <button 
-            onClick={() => setCurrentStep(p => Math.min(STEPS.length - 1, p + 1))} 
+            onClick={() => { window.scrollTo(0,0); setCurrentStep(p => Math.min(STEPS.length - 1, p + 1)); }} 
             disabled={currentStep === STEPS.length - 1}
-            className={`px-10 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${currentStep === STEPS.length - 1 ? 'bg-green-100 text-green-700' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg'}`}
+            className={`flex items-center gap-2 px-8 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${currentStep === STEPS.length - 1 ? 'bg-green-100 text-green-700 cursor-default' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
           >
-            Langkah Seterusnya
+            {currentStep === STEPS.length - 1 ? 'Selesai' : 'Seterusnya'}
+            {currentStep < STEPS.length - 1 && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>}
           </button>
         </div>
       </footer>
