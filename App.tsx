@@ -72,7 +72,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen pb-20 bg-gray-50">
-      <header className="bg-blue-900 text-white p-6 shadow-lg mb-8">
+      <header className="bg-blue-900 text-white p-6 shadow-lg mb-8 no-print">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">e-Tuntutan Perjalanan WP1.4</h1>
@@ -85,7 +85,7 @@ export default function App() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4">
-        <div className="flex flex-wrap gap-4 mb-8 justify-center overflow-x-auto py-2">
+        <div className="flex flex-wrap gap-4 mb-8 justify-center overflow-x-auto py-2 no-print">
           {STEPS.map((step, idx) => (
             <div key={idx} className="flex items-center">
               <div className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold ${
@@ -126,7 +126,7 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50 no-print">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <button 
             onClick={prevStep}
