@@ -285,10 +285,10 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                       Dari {j.pergi.dari} ke {j.pergi.ke}
                     </div>
 
-                    {/* BUTIRAN TOL DIBAWAH TUJUAN/TEMPAT (PERGI) */}
-                    {(j.pergi.tolMasuk || j.pergi.tolKeluar) && (
+                    {/* BUTIRAN TOL DIBAWAH TUJUAN/TEMPAT (PERGI) - Hanya muncul jika ada bayaran tol */}
+                    {(j.pergi.tol > 0) && (
                       <div className="text-[7.5pt] text-blue-700 mt-2 pt-2 border-t border-gray-100">
-                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'}
+                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'} (RM {j.pergi.tol.toFixed(2)})
                       </div>
                     )}
                   </td>
@@ -304,10 +304,10 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                          Dari {j.balik.dari} ke {j.balik.ke}
                       </div>
 
-                      {/* BUTIRAN TOL DIBAWAH TUJUAN/TEMPAT (BALIK) */}
-                      {(j.balik.tolMasuk || j.balik.tolKeluar) && (
+                      {/* BUTIRAN TOL DIBAWAH TUJUAN/TEMPAT (BALIK) - Hanya muncul jika ada bayaran tol */}
+                      {(j.balik.tol > 0) && (
                         <div className="text-[7.5pt] text-amber-700 mt-2 pt-2 border-t border-gray-100">
-                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'}
+                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'} (RM {j.balik.tol.toFixed(2)})
                         </div>
                       )}
                     </td>
