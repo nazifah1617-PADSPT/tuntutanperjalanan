@@ -172,11 +172,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
         </div>
       </div>
 
-      {/* ========================================================== */}
-      {/* SEKSYEN CETAKAN PDF (IKUT FORMAT WP1.4) */}
-      {/* ========================================================== */}
       <div className="print-only">
-        
         {/* MUKA SURAT 1: MAKLUMAT PEGAWAI */}
         <div className="header-right uppercase">Lampiran C</div>
         <div className="title-box">
@@ -424,9 +420,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* ========================================================== */}
-        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN (IKUT SCREENSHOT) */}
-        {/* ========================================================== */}
+        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
           <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">BELANJA PELBAGAI</div>
@@ -496,36 +490,16 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           <div className="font-bold uppercase text-center text-[11pt] mb-4 tracking-widest">PENGAKUAN</div>
           <div className="text-[9.5pt] font-medium leading-tight space-y-2">
             <p>Saya mengaku bahawa:</p>
-            <div className="flex gap-4">
-              <span className="w-6 font-bold">(a)</span>
-              <p className="flex-1 text-justify">perjalanan pada tarikh-tarikh tersebut adalah benar dan telah dibuat atas urusan rasmi;</p>
-            </div>
-            <div className="flex gap-4">
-              <span className="w-6 font-bold">(b)</span>
-              <p className="flex-1 text-justify">tuntutan ini dibuat mengikut kadar dan syarat seperti yang dinyatakan di bawah peraturan bertugas rasmi yang berkuat kuasa dan/atau peraturan berkursus yang berkuat kuasa;</p>
-            </div>
-            <div className="flex gap-4">
-              <span className="w-6 font-bold">(c)</span>
-              <p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit berjumlah sebanyak RM.................................................. telah sebenarnya dilakukan dan dibayar oleh saya;</p>
-            </div>
-            <div className="flex gap-4">
-              <span className="w-6 font-bold">(d)</span>
-              <p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit bukan atas nama saya berjumlah sebanyak RM…........................... telah sebenarnya dilakukan dan dibayar bagi pihak saya atas urusan rasmi dan tuntutan adalah berdasarkan kelayakan saya;</p>
-            </div>
-            <div className="flex gap-4">
-              <span className="w-6 font-bold">(e)</span>
-              <p className="flex-1 text-justify">semua butiran yang dinyatakan di atas adalah tepat dan benar dan saya bertanggungjawab terhadap semua maklumat yang dinyatakan; dan</p>
-            </div>
-            <div className="flex gap-4">
-              <span className="w-6 font-bold">(f)</span>
-              <p className="flex-1 text-justify">sekiranya saya mengemukakan tuntutan palsu, saya boleh dikenakan tindakan di bawah seksyen 18, Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [Akta 694] (Kesalahan dengan maksud untuk memperdayakan prinsipal oleh ejen).</p>
-            </div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(a)</span><p className="flex-1 text-justify">perjalanan pada tarikh-tarikh tersebut adalah benar dan telah dibuat atas urusan rasmi;</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(b)</span><p className="flex-1 text-justify">tuntutan ini dibuat mengikut kadar dan syarat seperti yang dinyatakan di bawah peraturan bertugas rasmi yang berkuat kuasa dan/atau peraturan berkursus yang berkuat kuasa;</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(c)</span><p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit berjumlah sebanyak RM.................................................. telah sebenarnya dilakukan dan dibayar oleh saya;</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(d)</span><p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit bukan atas nama saya berjumlah sebanyak RM…........................... telah sebenarnya dilakukan dan dibayar bagi pihak saya atas urusan rasmi dan tuntutan adalah berdasarkan kelayakan saya;</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(e)</span><p className="flex-1 text-justify">semua butiran yang dinyatakan di atas adalah tepat dan benar dan saya bertanggungjawab terhadap semua maklumat yang dinyatakan; dan</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(f)</span><p className="flex-1 text-justify">sekiranya saya mengemukakan tuntutan palsu, saya boleh dikenakan tindakan di bawah seksyen 18, Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [Akta 694] (Kesalahan dengan maksud untuk memperdayakan prinsipal oleh ejen).</p></div>
           </div>
           
           <div className="flex justify-between mt-16">
-             <div className="w-1/2 flex items-end pb-4 font-bold text-[10pt]">
-                Tarikh: ...........................................
-             </div>
+             <div className="w-1/2 flex items-end pb-4 font-bold text-[10pt]">Tarikh: ...........................................</div>
              <div className="w-1/2 text-center">
                 <div className="h-10 border-b border-black w-64 mx-auto border-dotted flex items-end justify-center"></div>
                 <div className="pt-2 font-bold uppercase text-[10pt]">(Tandatangan Pemohon)</div>
@@ -534,7 +508,68 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           </div>
         </div>
 
-        <div className="mt-8 flex justify-between px-4 text-gray-400 italic text-[7pt]">
+        <div className="page-break"></div>
+
+        {/* ========================================================== */}
+        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI (IKUT SCREENSHOT) */}
+        {/* ========================================================== */}
+        <div className="border-[1.5px] border-black">
+          <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">PENGESAHAN</div>
+          <div className="p-4 text-[10pt] text-justify leading-relaxed border-b-[1.5px] border-black">
+            Berdasarkan pengakuan yang dinyatakan oleh pegawai yang memohon, disahkan bahawa perjalanan tersebut telah dilaksanakan atas urusan rasmi dan kelayakan tuntutan pegawai mematuhi peraturan kewangan yang berkuat kuasa.
+          </div>
+          <table className="w-full border-collapse border-none">
+            <tbody className="text-[10pt]">
+              <tr className="min-h-[80px]">
+                <td className="w-3/5 p-4 border-r border-black align-top">
+                   <div className="mt-2 font-bold">Tarikh: ...........................................</div>
+                </td>
+                <td className="w-2/5 p-4 align-top text-center relative">
+                   <div className="mt-8 border-b border-black border-dotted w-48 mx-auto"></div>
+                   <div className="text-[9pt] font-bold mt-1">(Tandatangan)</div>
+                </td>
+              </tr>
+              <tr className="min-h-[80px] border-t border-black">
+                <td className="w-3/5 border-r border-black"></td>
+                <td className="w-2/5 p-4 align-top text-center">
+                   <div className="mt-4 border-b border-black border-dotted w-48 mx-auto"></div>
+                   <div className="text-[9pt] font-bold mt-1">(Nama)</div>
+                </td>
+              </tr>
+              <tr className="min-h-[80px] border-t border-black">
+                <td className="w-3/5 border-r border-black"></td>
+                <td className="w-2/5 p-4 align-top text-center">
+                   <div className="mt-4 border-b border-black border-dotted w-48 mx-auto"></div>
+                   <div className="text-[9pt] font-bold mt-1">(Jawatan)</div>
+                   <div className="text-[8pt] font-bold mt-2 italic leading-tight">b.p. Ketua Setiausaha/ Pegawai Pengawal</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="bg-gray-50 text-center font-bold py-2 uppercase text-[11pt] border-y-[1.5px] border-black tracking-widest">PENDAHULUAN DIRI (JIKA ADA)</div>
+          <table className="w-full border-collapse border-none">
+            <tbody className="text-[10.5pt]">
+              <tr className="border-b border-black">
+                <td className="px-4 py-2.5">Pendahuluan Diri diberi</td>
+                <td className="w-8 text-center border-l border-black font-bold">RM</td>
+                <td className="w-32 text-right px-2 font-bold">{data.advance > 0 ? data.advance.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-2.5">Tolak: Tuntutan sekarang</td>
+                <td className="w-8 text-center border-l border-black font-bold">RM</td>
+                <td className="w-32 text-right px-2 font-bold">{grandTotal.toFixed(2)}</td>
+              </tr>
+              <tr className="font-black bg-gray-100">
+                <td className="px-4 py-3">{nettTotal >= 0 ? 'Baki dituntut' : 'Baki dibayar balik'}</td>
+                <td className="w-8 text-center border-l border-black font-bold">RM</td>
+                <td className="w-32 text-right px-2 font-black">{Math.abs(nettTotal).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-12 flex justify-between px-4 text-gray-400 italic text-[7pt]">
            <div>Sistem e-Tuntutan WP1.4 Digital</div>
            <div>Dicetak pada: {new Date().toLocaleString('ms-MY')}</div>
         </div>
