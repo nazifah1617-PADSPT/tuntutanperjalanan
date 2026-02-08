@@ -15,6 +15,8 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
     onMiscChange({ [name]: parseFloat(value) || 0 });
   };
 
+  const getMiscVal = (key: keyof MiscExpenses) => Number(data.misc[key]) || 0;
+
   // Helper Formatter
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
@@ -59,8 +61,6 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   const partATotal = mileageTotal + transportTotal + sectionAMealHarianTotal;
   const partBTotal = data.lodgings.reduce((sum, l) => sum + ((Number(l.bilangan) || 0) * (Number(l.kadar) || 0)), 0);
   
-  const getMiscVal = (key: keyof MiscExpenses) => Number(data.misc[key]) || 0;
-
   const miscManualTotal = 
     getMiscVal('telefon') + 
     getMiscVal('pos') + 
@@ -175,151 +175,269 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
         </div>
       </div>
 
+      {/* ========================================================== */}
+      {/* SEKSYEN CETAKAN (6 MUKA SURAT LENGKAP) */}
+      {/* ========================================================== */}
       <div className="print-only">
-        {/* MUKA SURAT 1-3 DIABAIKAN UNTUK KEPENTINGAN RUANG, KEKALKAN LOGIK SEDIA ADA */}
-        {/* ... */}
         
+        {/* MUKA SURAT 1: MAKLUMAT PEGAWAI */}
+        <div className="header-right uppercase">Lampiran C</div>
+        <div className="title-box">
+          KENYATAAN TUNTUTAN ELAUN PERJALANAN DALAM NEGERI WP1.4<br/>
+          BAGI BULAN {bulanTuntutan}
+        </div>
+
+        <table>
+          <thead>
+            <tr><th colSpan={3} className="text-center py-1 uppercase font-bold tracking-widest bg-gray-100">MAKLUMAT PEGAWAI</th></tr>
+          </thead>
+          <tbody className="text-[10pt]">
+            <tr><td className="w-[35%]">Nama (Huruf Besar)</td><td colSpan={2}>: <strong>{data.info.nama.toUpperCase() || '____________________'}</strong></td></tr>
+            <tr><td>No. Kad Pengenalan</td><td colSpan={2}>: {data.info.ic || '____________________'}</td></tr>
+            <tr><td>Jawatan</td><td colSpan={2}>: {data.info.jawatan || '____________________'}</td></tr>
+            <tr><td>Gred</td><td colSpan={2}>: {data.info.gred || '____________________'}</td></tr>
+            <tr><td>No. Akaun Bank</td><td colSpan={2}>: {data.info.akaunBank || '____________________'}</td></tr>
+            <tr><td>Nama / Alamat Bank</td><td colSpan={2}>: {data.info.namaBank || '____________________'}</td></tr>
+            <tr><td>No. Telefon (Pejabat/Bimbit)</td><td colSpan={2}>: {data.info.telefon || '____________________'}</td></tr>
+            <tr><td rowSpan={3}>Pendapatan (RM)</td><td className="w-24 border-r-0">Gaji</td><td>: RM {data.info.gaji.toFixed(2)}</td></tr>
+            <tr><td className="border-r-0">Elaun-elaun</td><td>: RM {data.info.elaun.toFixed(2)}</td></tr>
+            <tr><td className="border-r-0 font-bold">Jumlah</td><td className="font-bold">: RM {(data.info.gaji + data.info.elaun).toFixed(2)}</td></tr>
+            <tr><td rowSpan={2} className="align-middle">Kenderaan</td><td className="text-center font-bold bg-gray-50">Kereta</td><td className="text-center font-bold bg-gray-50">Motosikal</td></tr>
+            <tr><td>Jenis/Model: {isKereta ? data.info.kenderaanModel : '-'}<br/>No. Plat: {isKereta ? data.info.noPendaftaran : '-'}</td><td>Jenis/Model: {!isKereta ? data.info.kenderaanModel : '-'}<br/>No. Plat: {!isKereta ? data.info.noPendaftaran : '-'}</td></tr>
+            <tr><td>Alamat Pejabat</td><td colSpan={2}>{data.info.alamatPejabat || '____________________'}</td></tr>
+            <tr><td>Alamat Rumah Pegawai</td><td colSpan={2}>{data.info.alamatRumah || '____________________'}</td></tr>
+          </tbody>
+        </table>
+
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 4: BAHAGIAN B (PENAILAN BARU) */}
+        {/* MUKA SURAT 2: LOG PERJALANAN */}
+        <div className="title-box">KENYATAAN TUNTUTAN</div>
+        <table>
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="w-[15%] text-center py-2" rowSpan={2}>Tarikh</th>
+              <th className="text-center py-2" colSpan={2}>Waktu</th>
+              <th className="text-center py-2" rowSpan={2}>Tujuan / Tempat / Butiran Tol</th>
+              <th className="w-[12%] text-center py-2" rowSpan={2}>Jarak (KM)</th>
+            </tr>
+            <tr className="bg-gray-100">
+              <th className="w-[12%] text-center py-2">Bertolak</th>
+              <th className="w-[12%] text-center py-2">Sampai</th>
+            </tr>
+          </thead>
+          <tbody className="text-[9pt]">
+            {data.logs.map((j, i) => (
+              <React.Fragment key={i}>
+                <tr>
+                  <td className="text-center align-middle p-2 font-bold" rowSpan={j.adaBalik ? 2 : 1}>{formatDate(j.tarikh)}</td>
+                  <td className="text-center py-4">{formatTime(j.pergi.waktuBertolak)}</td>
+                  <td className="text-center py-4">{formatTime(j.pergi.waktuSampai)}</td>
+                  <td className="px-3 py-4 leading-normal">
+                    <div className="font-bold mb-1 uppercase text-[8.5pt]">{j.tujuan}</div>
+                    <div className="text-[8pt] mb-1 italic">Dari {j.pergi.dari} ke {j.pergi.ke}</div>
+                    {(Number(j.pergi.tol) > 0) && (
+                      <div className="text-[7.5pt] text-blue-700 mt-2">
+                        <span className="font-bold uppercase">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'} (RM {(Number(j.pergi.tol)||0).toFixed(2)})
+                      </div>
+                    )}
+                  </td>
+                  <td className="text-center py-4">{(Number(j.pergi.jarak)||0).toFixed(1)}</td>
+                </tr>
+                {j.adaBalik && (
+                  <tr>
+                    <td className="text-center py-4 border-l-0">{formatTime(j.balik.waktuBertolak)}</td>
+                    <td className="text-center py-4">{formatTime(j.balik.waktuSampai)}</td>
+                    <td className="px-3 py-4 leading-normal">
+                      <div className="text-[8pt] italic">Dari {j.balik.dari} ke {j.balik.ke}</div>
+                      {(Number(j.balik.tol) > 0) && (
+                        <div className="text-[7.5pt] text-amber-700 mt-2">
+                          <span className="font-bold uppercase">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'} (RM {(Number(j.balik.tol)||0).toFixed(2)})
+                        </div>
+                      )}
+                    </td>
+                    <td className="text-center py-4">{(Number(j.balik.jarak)||0).toFixed(1)}</td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
+            <tr className="font-bold bg-gray-50">
+              <td colSpan={4} className="text-right py-3 pr-4 uppercase text-[10pt]">Jumlah Jarak (KM):</td>
+              <td className="text-center py-3 text-[10pt]">{totalKm.toFixed(1)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div className="page-break"></div>
+
+        {/* MUKA SURAT 3: BAHAGIAN A */}
+        <div className="border-[1.5px] border-black">
+          <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN A</div>
+          <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">ELAUN PERJALANAN KENDERAAN</div>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="text-[9pt]">
+                <th className="w-[18%] text-center border-r border-black font-bold">Jenis Kenderaan</th>
+                <th className="w-[16%] text-center border-r border-black font-bold">Kiraan Kilometer</th>
+                <th className="w-[20%] text-center border-r border-black font-bold">Jarak (KM)</th>
+                <th className="w-[22%] text-center border-r border-black font-bold">Kadar Sekilometer</th>
+                <th className="text-center font-bold">Jumlah (RM)</th>
+              </tr>
+            </thead>
+            <tbody className="text-[9pt]">
+              <tr className="border-t border-black">
+                <td rowSpan={2} className="text-center align-middle font-bold border-r border-black uppercase">Kereta</td>
+                <td className="px-2 py-2 border-r border-black text-center">500 km pertama</td>
+                <td className="text-center border-r border-black font-bold">{isKereta ? km1.toFixed(2) : ''}</td>
+                <td className="text-center border-r border-black">RM {isKereta ? KADAR_KERETA.pertama.toFixed(2) : '0.85'} sen/km</td>
+                <td className="text-right px-2 font-bold">{isKereta ? amt1.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-t border-black">
+                <td className="px-2 py-2 border-r border-black text-center">501 km seterusnya</td>
+                <td className="text-center border-r border-black font-bold">{isKereta ? km2.toFixed(2) : ''}</td>
+                <td className="text-center border-r border-black">RM {isKereta ? KADAR_KERETA.seterusnya.toFixed(2) : '0.75'} sen/km</td>
+                <td className="text-right px-2 font-bold">{isKereta ? amt2.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-t-[1.5px] border-black font-bold">
+                <td colSpan={4} className="text-right pr-4 py-2 uppercase text-[9.5pt]">Jumlah (Mileage)</td>
+                <td className="text-right px-2 py-2 text-[9.5pt]">{mileageTotal.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="text-center font-bold py-1 uppercase text-[10pt] border-y-[1.5px] border-black bg-white">TAMBANG PENGANGKUTAN AWAM / MAKAN</div>
+          <table className="w-full border-collapse">
+            <tbody className="text-[9.5pt]">
+              <tr className="border-b border-black">
+                <td className="px-4 py-1.5 w-[80%]">Jumlah Tambang Pengangkutan Awam (Teksi/Bas/Lain-lain)</td>
+                <td className="border-l border-black w-8 text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{transportTotal.toFixed(2)}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-1.5">Jumlah Elaun Makan (RM {mealTotal.toFixed(2)}) + Elaun Harian (RM {harianTotal.toFixed(2)})</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{sectionAMealHarianTotal.toFixed(2)}</td>
+              </tr>
+              <tr className="font-black bg-gray-50">
+                <td className="text-right pr-4 py-2 uppercase">JUMLAH (BAHAGIAN A)</td>
+                <td className="border-l border-black text-center">RM</td>
+                <td className="border-l border-black text-right px-2">{partATotal.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="page-break"></div>
+
+        {/* MUKA SURAT 4: BAHAGIAN B (SUSUNAN KEMAS) */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">BAHAGIAN B</div>
           
-          {/* HEADER WILAYAH */}
-          <div className="flex border-b border-black">
-            <div className="w-1/2 border-r border-black font-bold py-2 uppercase text-center text-[8pt] px-2 flex items-center justify-center">
-              TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SEMENANJUNG MALAYSIA)
-            </div>
-            <div className="w-1/2 font-bold py-2 uppercase text-center text-[8pt] px-2 flex items-center justify-center">
-              TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SABAH/ SARAWAK /WP LABUAN)
-            </div>
+          <div className="flex border-b border-black text-[8pt] font-bold text-center">
+            <div className="w-1/2 border-r border-black py-2 px-2 flex items-center justify-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SEMENANJUNG MALAYSIA)</div>
+            <div className="w-1/2 py-2 px-2 flex items-center justify-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SABAH/ SARAWAK /WP LABUAN)</div>
           </div>
 
-          {/* BARIS BSH */}
-          <div className="flex border-b border-black min-h-[80px]">
+          <div className="flex border-b border-black min-h-[90px]">
             <div className="w-1/2 border-r border-black p-2 flex">
               <div className="flex-1 text-[8.5pt] leading-relaxed">
-                BSH x <span className="font-bold border-b border-black px-1">{hotels[0]?.bilangan || '____'}</span> sebanyak RM <span className="font-bold border-b border-black px-1">{(Number(hotels[0]?.kadar) || 0).toFixed(2)}</span> /hari.<br/>
+                BSH x <span className="font-bold border-b border-black px-1">{hotels[0]?.bilangan || '____'}</span> sebanyak RM <span className="font-bold border-b border-black px-1">{(Number(hotels[0]?.kadar)||0).toFixed(2)}</span> /hari.<br/>
                 <span className="text-[7.5pt] italic">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</span><br/><br/>
                 [Resit <span className="font-bold border-b border-black px-1">{hotels[0] ? 'DISERTAKAN' : '________________'}</span>]
               </div>
-              <div className="w-24 border-l border-black flex flex-col -mt-2 -mb-2">
-                 <div className="h-full flex">
+              <div className="w-24 border-l border-black flex items-center justify-center">
+                 <div className="w-full flex h-full">
                     <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9pt]">
-                      {hotels[0] ? ((Number(hotels[0].bilangan)||0) * (Number(hotels[0].kadar)||0)).toFixed(2) : '0.00'}
-                    </div>
+                    <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9pt]">{hotels[0] ? ((Number(hotels[0].bilangan)||0) * (Number(hotels[0].kadar)||0)).toFixed(2) : '0.00'}</div>
                  </div>
               </div>
             </div>
             <div className="w-1/2 p-2 flex">
-              <div className="flex-1 text-[8.5pt] leading-relaxed">
-                BSH x ________ sebanyak RM ________ /hari.<br/>
-                <span className="text-[7.5pt] italic">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</span><br/><br/>
-                [Resit ________________________]
-              </div>
-              <div className="w-24 border-l border-black flex flex-col -mt-2 -mb-2">
-                 <div className="h-full flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1"></div>
-                 </div>
+              <div className="flex-1 text-[8.5pt]">BSH x ______ sebanyak RM ______ /hari.<br/>[Resit ________________]</div>
+              <div className="w-24 border-l border-black flex">
+                 <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
+                 <div className="flex-1"></div>
               </div>
             </div>
           </div>
 
-          {/* HEADER ELAUN LOJING */}
-          <div className="flex border-b border-black">
-            <div className="w-1/2 border-r border-black font-bold py-2 uppercase text-center text-[8pt] px-2 flex items-center justify-center">
-              TUNTUTAN ELAUN LOJING<br/>(SEMENANJUNG MALAYSIA)
-            </div>
-            <div className="w-1/2 font-bold py-2 uppercase text-center text-[8pt] px-2 flex items-center justify-center">
-              TUNTUTAN ELAUN LOJING<br/>(SABAH/ SARAWAK /WP LABUAN)
-            </div>
+          <div className="flex border-b border-black text-[8pt] font-bold text-center">
+            <div className="w-1/2 border-r border-black py-2 uppercase">TUNTUTAN ELAUN LOJING (SEMENANJUNG)</div>
+            <div className="w-1/2 py-2 uppercase">TUNTUTAN ELAUN LOJING (SABAH/SARAWAK)</div>
           </div>
 
-          {/* BARIS LOJING */}
-          <div className="flex border-b border-black min-h-[40px]">
+          <div className="flex border-b border-black min-h-[50px]">
             <div className="w-1/2 border-r border-black p-2 flex">
               <div className="flex-1 text-[8.5pt]">
-                Elaun Lojing x <span className="font-bold border-b border-black px-1">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + (Number(l.bilangan)||0), 0) : '____'}</span> sebanyak RM <span className="font-bold border-b border-black px-1">{(Number(lojingsOnly[0]?.kadar) || 0).toFixed(2)}</span> /hari
+                Elaun Lojing x <span className="font-bold border-b border-black px-1">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + (Number(l.bilangan)||0), 0) : '____'}</span> sebanyak RM <span className="font-bold border-b border-black px-1">{(Number(lojingsOnly[0]?.kadar)||0).toFixed(2)}</span> /hari
               </div>
-              <div className="w-24 border-l border-black flex flex-col -mt-2 -mb-2">
-                 <div className="h-full flex">
+              <div className="w-24 border-l border-black flex items-center justify-center">
+                 <div className="w-full flex h-full">
                     <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9pt]">
-                      {lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + ((Number(l.bilangan)||0) * (Number(l.kadar)||0)), 0).toFixed(2) : '0.00'}
-                    </div>
+                    <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9pt]">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + ((Number(l.bilangan)||0) * (Number(l.kadar)||0)), 0).toFixed(2) : '0.00'}</div>
                  </div>
               </div>
             </div>
             <div className="w-1/2 p-2 flex">
-              <div className="flex-1 text-[8.5pt]">
-                Elaun Lojing x ________ sebanyak RM ________ /hari
-              </div>
-              <div className="w-24 border-l border-black flex flex-col -mt-2 -mb-2">
-                 <div className="h-full flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1"></div>
-                 </div>
+              <div className="flex-1 text-[8.5pt]">Elaun Lojing x ______ sebanyak RM ______ /hari</div>
+              <div className="w-24 border-l border-black flex">
+                 <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
+                 <div className="flex-1"></div>
               </div>
             </div>
           </div>
 
-          {/* ALAMAT LOJING */}
-          <div className="flex border-b border-black min-h-[80px]">
+          <div className="flex border-b border-black min-h-[80px] text-[8.5pt]">
             <div className="w-1/2 border-r border-black p-2">
-              <div className="text-[8.5pt] font-bold">TARIKH LOJING: <span className="font-black ml-1">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : '________________'}</span></div>
-              <div className="text-[8.5pt] font-bold mt-1">ALAMAT LOJING:</div>
-              <div className="text-[8pt] mt-1 uppercase leading-tight font-black">{lojingsOnly[0]?.alamat || ''}</div>
+              <div className="font-bold">TARIKH LOJING: <span className="font-black border-b border-black">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : '________________'}</span></div>
+              <div className="font-bold mt-1">ALAMAT LOJING:</div>
+              <div className="mt-1 uppercase font-black">{lojingsOnly[0]?.alamat || ''}</div>
             </div>
-            <div className="w-1/2 p-2">
-              <div className="text-[8.5pt] font-bold">TARIKH LOJING: ________________</div>
-              <div className="text-[8.5pt] font-bold mt-1">ALAMAT LOJING:</div>
-            </div>
+            <div className="w-1/2 p-2"><div className="font-bold">TARIKH LOJING: ________________</div><div className="font-bold mt-1">ALAMAT LOJING:</div></div>
           </div>
 
-          {/* JUMLAH BAHAGIAN B */}
-          <div className="flex bg-white">
-            <div className="flex-1 py-3 text-right pr-4 font-black uppercase text-[10pt] tracking-widest">
-              JUMLAH (BAHAGIAN B)
-            </div>
+          <div className="flex font-black uppercase text-[10.5pt] bg-gray-50">
+            <div className="flex-1 py-3 text-right pr-4">JUMLAH (BAHAGIAN B)</div>
             <div className="w-24 border-l border-black flex">
-              <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[10pt]">RM</div>
-              <div className="flex-1 flex items-center justify-end px-2 font-black text-[10pt]">
-                {partBTotal.toFixed(2)}
-              </div>
+               <div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div>
+               <div className="flex-1 flex items-center justify-end px-2">{partBTotal.toFixed(2)}</div>
             </div>
           </div>
         </div>
-        <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi</div>
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN (KEKALKAN LOGIK SEDIA ADA) */}
+        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN */}
         <div className="border-[1.5px] border-black">
-          <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
-          <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">BELANJA PELBAGAI</div>
+          <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C: BELANJA PELBAGAI</div>
           <table className="w-full border-collapse">
             <tbody className="text-[9.5pt]">
-              {/* Item-item Bahagian C mengikut screenshot terdahulu */}
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Telefon, Telegram , Faks [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('telefon') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2">Telefon, Telegram, Faks [Resit {getMiscVal('telefon') > 0 ? 'DISERTAKAN' : '_____'}]</td>
                 <td className="border-l border-black w-8 text-center font-bold">RM</td>
-                <td className="border-l border-black w-32 text-right px-2 font-bold">{getMiscVal('telefon') > 0 ? getMiscVal('telefon').toFixed(2) : ''}</td>
+                <td className="border-l border-black w-32 text-right px-2 font-bold">{getMiscVal('telefon') > 0 ? getMiscVal('telefon').toFixed(2) : '0.00'}</td>
               </tr>
-              {/* ... item lain ... */}
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Tol [Resit/Penyata Touch&Go /RFID/Lain-lain: <span className="font-bold border-b border-black inline-block min-w-[200px]">{(totalTolLogs + getMiscVal('tol')) > 0 ? 'DISERTAKAN' : ''}</span>]</td>
-                <td className="border-l border-black w-8 text-center font-bold">RM</td>
-                <td className="border-l border-black w-32 text-right px-2 font-bold">{ (totalTolLogs + getMiscVal('tol')) > 0 ? (totalTolLogs + getMiscVal('tol')).toFixed(2) : ''}</td>
+                <td className="px-4 py-2">Pos [Resit {getMiscVal('pos') > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('pos') > 0 ? getMiscVal('pos').toFixed(2) : '0.00'}</td>
               </tr>
-              <tr className="font-bold text-[10.5pt] border-t border-black">
+              <tr className="border-b border-black">
+                <td className="px-4 py-2">Dobi [Resit {getMiscVal('dobi') > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('dobi') > 0 ? getMiscVal('dobi').toFixed(2) : '0.00'}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-2">Tempat Letak Kereta / Tol [Resit {(getMiscVal('parking') + getMiscVal('tol') + totalTolLogs) > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{(getMiscVal('parking') + getMiscVal('tol') + totalTolLogs).toFixed(2)}</td>
+              </tr>
+              <tr className="font-bold text-[10.5pt] border-t-[1.5px] border-black">
                 <td className="text-right pr-4 py-2 uppercase">JUMLAH (BAHAGIAN C)</td>
                 <td className="border-l border-black text-center">RM</td>
                 <td className="border-l border-black text-right px-2">{miscTotal.toFixed(2)}</td>
               </tr>
-              <tr className="font-black text-[11pt] border-t-[1.5px] border-black bg-gray-50">
-                <td className="text-right pr-4 py-3 uppercase">JUMLAH KESELURUHAN TUNTUTAN (BAHAGIAN A+B+C)</td>
+              <tr className="font-black text-[11pt] border-t-[1.5px] border-black bg-gray-100">
+                <td className="text-right pr-4 py-3 uppercase">JUMLAH KESELURUHAN (BAHAGIAN A+B+C)</td>
                 <td className="border-l border-black text-center">RM</td>
                 <td className="border-l border-black text-right px-2 font-black">{grandTotal.toFixed(2)}</td>
               </tr>
@@ -327,8 +445,79 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           </table>
         </div>
 
-        {/* PENGAKUAN DAN PENGESAHAN KEKAL DI BAWAH JADUAL */}
-        {/* ... */}
+        <div className="border-[1.5px] border-black p-6 mt-8">
+          <div className="font-bold uppercase text-center text-[11pt] mb-4 tracking-widest">PENGAKUAN</div>
+          <div className="text-[9.5pt] space-y-2">
+            <p>Saya mengaku bahawa perjalanan pada tarikh-tarikh tersebut adalah benar dan telah dibuat atas urusan rasmi, dan tuntutan ini dibuat mengikut kadar WP1.4 yang berkuat kuasa.</p>
+          </div>
+          <div className="flex justify-between mt-12">
+             <div className="w-1/2 flex items-end font-bold">Tarikh: {new Date().toLocaleDateString('ms-MY')}</div>
+             <div className="w-1/2 text-center">
+                <div className="h-10 border-b border-black w-64 mx-auto border-dotted"></div>
+                <div className="pt-2 font-bold uppercase text-[9pt]">(Tandatangan Pemohon)</div>
+                <div className="font-black uppercase text-blue-900">{data.info.nama}</div>
+             </div>
+          </div>
+        </div>
+
+        <div className="page-break"></div>
+
+        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI (MENGIKUT PDF ASAL) */}
+        <div className="border-[1.5px] border-black">
+          <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">PENGESAHAN</div>
+          <div className="p-4 text-[10pt] text-justify leading-relaxed border-b-[1.5px] border-black">
+            Berdasarkan pengakuan yang dinyatakan oleh pegawai yang memohon, disahkan bahawa perjalanan tersebut telah dilaksanakan atas urusan rasmi dan kelayakan tuntutan pegawai mematuhi peraturan kewangan yang berkuat kuasa.
+          </div>
+          <table className="w-full border-collapse border-none">
+            <tbody className="text-[10pt]">
+              <tr className="min-h-[80px]">
+                <td className="w-3/5 p-4 border-r border-black align-top"><div className="mt-2 font-bold">Tarikh: ...........................................</div></td>
+                <td className="w-2/5 p-4 align-top text-center relative">
+                   <div className="mt-8 border-b border-black border-dotted w-48 mx-auto"></div>
+                   <div className="text-[9pt] font-bold mt-1">(Tandatangan)</div>
+                </td>
+              </tr>
+              <tr className="min-h-[80px] border-t border-black">
+                <td className="w-3/5 border-r border-black"></td>
+                <td className="w-2/5 p-4 align-top text-center">
+                   <div className="mt-4 border-b border-black border-dotted w-48 mx-auto"></div>
+                   <div className="text-[9pt] font-bold mt-1">(Nama)</div>
+                </td>
+              </tr>
+              <tr className="min-h-[80px] border-t border-black">
+                <td className="w-3/5 border-r border-black"></td>
+                <td className="w-2/5 p-4 align-top text-center">
+                   <div className="mt-4 border-b border-black border-dotted w-48 mx-auto"></div>
+                   <div className="text-[9pt] font-bold mt-1">(Jawatan)</div>
+                   <div className="text-[8pt] font-bold mt-2 italic leading-tight">b.p. Ketua Setiausaha/ Pegawai Pengawal</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="bg-gray-50 text-center font-bold py-2 uppercase text-[11pt] border-y-[1.5px] border-black tracking-widest">PENDAHULUAN DIRI (JIKA ADA)</div>
+          <table className="w-full border-collapse border-none">
+            <tbody className="text-[10.5pt]">
+              <tr className="border-b border-black">
+                <td className="px-4 py-2.5">Pendahuluan Diri diberi</td>
+                <td className="w-8 text-center border-l border-black font-bold">RM</td>
+                <td className="w-32 text-right px-2 font-bold">{(Number(data.advance)||0).toFixed(2)}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-2.5">Tolak: Tuntutan sekarang</td>
+                <td className="w-8 text-center border-l border-black font-bold">RM</td>
+                <td className="w-32 text-right px-2 font-bold">{grandTotal.toFixed(2)}</td>
+              </tr>
+              <tr className="font-black bg-gray-100">
+                <td className="px-4 py-3">{nettTotal >= 0 ? 'Baki dituntut' : 'Baki dibayar balik'}</td>
+                <td className="w-8 text-center border-l border-black font-bold">RM</td>
+                <td className="w-32 text-right px-2 font-black">{Math.abs(nettTotal).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-8 text-center text-[7pt] text-gray-400 italic">© e-Tuntutan WP1.4 Digital</div>
       </div>
     </div>
   );
