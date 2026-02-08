@@ -60,11 +60,11 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   const partBTotal = data.lodgings.reduce((sum, l) => sum + (l.bilangan * l.kadar), 0);
   
   const miscManualTotal = (Object.entries(data.misc)
-    .filter(([key]) => key !== 'tol' && key !== 'saringan' && key !== 'kemasukanPremis')
+    .filter(([key]) => key !== 'tol')
     .map(([_, v]) => v) as number[])
     .reduce((sum, val) => sum + val, 0);
   
-  const miscTotal = miscManualTotal + totalTolLogs + data.misc.tol + data.misc.saringan + data.misc.kemasukanPremis;
+  const miscTotal = miscManualTotal + totalTolLogs + data.misc.tol;
   
   const grandTotal = partATotal + partBTotal + miscTotal;
   const nettTotal = grandTotal - data.advance;
@@ -263,7 +263,9 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 3: BAHAGIAN A */}
+        {/* ========================================================== */}
+        {/* MUKA SURAT 3: BAHAGIAN A (IKUT SCREENSHOT) */}
+        {/* ========================================================== */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN A</div>
           <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">ELAUN PERJALANAN KENDERAAN</div>
@@ -304,156 +306,206 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                 <td className="text-center border-r border-black align-middle">RM <span className="font-bold">{!isKereta ? KADAR_MOTOSIKAL.seterusnya.toFixed(2) : '0.45'}</span> sen/km</td>
                 <td className="text-right px-2 align-middle font-bold">{!isKereta ? amt2.toFixed(2) : ''}</td>
               </tr>
-              <tr className="border-t-[1.5px] border-black font-bold"><td colSpan={4} className="text-right pr-4 py-2 uppercase">Jumlah</td><td className="text-right px-2 py-2">{mileageTotal.toFixed(2)}</td></tr>
-            </tbody>
-          </table>
-          <div className="text-center font-bold py-1 uppercase text-[10pt] border-y-[1.5px] border-black bg-white">TUNTUTAN TAMBANG PENGANGKUTAN AWAM</div>
-          <table className="w-full border-collapse">
-            <tbody className="text-[9pt]">
-              {['Teksi/Kereta Sewa', 'Bas', 'Kereta Api', 'Feri', 'Lain-Lain'].map((t, idx) => (
-                <tr key={idx} className="border-b border-black">
-                  <td className="w-[80%] px-4 py-1.5 leading-tight">{t} [Resit ..........................................................................................]</td>
-                  <td className="border-l border-black w-8 text-center font-bold">RM</td>
-                  <td className="border-l border-black text-right px-2 font-bold">
-                    {idx === 0 && data.transport.teksi > 0 ? data.transport.teksi.toFixed(2) : 
-                     idx === 1 && data.transport.bas > 0 ? data.transport.bas.toFixed(2) : 
-                     idx === 2 && data.transport.keretaApi > 0 ? data.transport.keretaApi.toFixed(2) : 
-                     idx === 3 && data.transport.feri > 0 ? data.transport.feri.toFixed(2) : 
-                     idx === 4 && data.transport.lainLain > 0 ? data.transport.lainLain.toFixed(2) : ''}
-                  </td>
-                </tr>
-              ))}
-              <tr className="font-bold text-[10pt]"><td className="text-right pr-4 py-1.5 uppercase tracking-wide">Jumlah</td><td className="border-l border-black text-center">RM</td><td className="border-l border-black text-right px-2">{transportTotal.toFixed(2)}</td></tr>
-            </tbody>
-          </table>
-          <table className="w-full border-collapse border-t-[1.5px] border-black">
-            <thead><tr className="text-[8.5pt]"><th className="w-1/2 border-r border-black font-bold py-1 uppercase text-center">TUNTUTAN ELAUN MAKAN/ ELAUN HARIAN<br/>(SEMENANJUNG MALAYSIA)</th><th className="w-1/2 font-bold py-1 uppercase text-center">TUNTUTAN ELAUN MAKAN/ ELAUN HARIAN<br/>(SABAH/ SARAWAK/ LABUAN)</th></tr></thead>
-            <tbody className="text-[8.5pt]">
-              <tr>
-                <td className="border-r border-black p-0 align-top">
-                  <div className="font-bold px-2 py-1 border-y border-black uppercase bg-gray-50/30">ELAUN MAKAN</div>
-                  <table className="w-full border-none border-collapse text-[8pt]">
-                    <thead><tr className="border-b border-black"><th className="border-r border-black text-left px-2 py-1">Bahagian Makan</th><th className="border-r border-black text-center w-12 font-bold">Bil. Dituntut</th><th className="border-r border-black text-center w-12 font-bold">Bil. Hari</th><th className="text-center w-16 font-bold">RM</th></tr></thead>
-                    <tbody>
-                      {['Sarapan Pagi', 'Makan Tengah Hari', 'Makan Malam'].map((m, idx) => {
-                        const meal = idx === 0 ? data.meals.sarapan : idx === 1 ? data.meals.makanTengahHari : data.meals.makanMalam;
-                        return (
-                          <tr key={idx} className="border-b border-black">
-                            <td className="border-r border-black px-2 py-1">• {m}</td>
-                            <td className="border-r border-black text-center">{meal.bil || ''}</td>
-                            <td className="border-r border-black text-center">{meal.hari || ''}</td>
-                            <td className="text-right px-2">{(meal.bil * meal.hari * meal.kadar).toFixed(2)}</td>
-                          </tr>
-                        );
-                      })}
-                      <tr className="font-bold border-b-[1.5px] border-black bg-white"><td colSpan={3} className="text-right pr-4 py-1">Jumlah</td><td className="text-right px-2 py-1">{mealTotal.toFixed(2)}</td></tr>
-                    </tbody>
-                  </table>
-                  <div className="px-2 py-2 text-[8pt]">Elaun Makan x {data.meals.sarapan.hari || '....'} sebanyak RM {mealTotal > 0 ? (mealTotal / (data.meals.sarapan.hari || 1)).toFixed(2) : '...........'} /hari</div>
-                  <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]"><span>Jumlah (RM)</span><span>{mealTotal.toFixed(2)}</span></div>
-                  <div className="font-bold px-2 py-1 border-b border-black uppercase bg-gray-50/30">ELAUN HARIAN</div>
-                  <div className="px-2 py-2 text-[8pt]">Elaun Harian x {data.meals.harian.hari || '....'} sebanyak RM {data.meals.harian.kadar.toFixed(2)} /hari</div>
-                  <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]"><span>Jumlah (RM)</span><span>{harianTotal.toFixed(2)}</span></div>
-                  <div className="flex justify-between px-2 font-black py-2 bg-gray-100 uppercase border-b border-black"><span>Jumlah (RM)</span><span>RM {sectionAMealHarianTotal.toFixed(2)}</span></div>
-                </td>
-                <td className="align-top p-0"><div className="font-bold px-2 py-1 border-y border-black uppercase bg-gray-50/30">ELAUN MAKAN</div><table className="w-full border-none border-collapse text-[8pt]"><thead><tr className="border-b border-black"><th className="border-r border-black text-left px-2 py-1">Bahagian Makan</th><th className="border-r border-black text-center w-12 font-bold">Bil. Dituntut</th><th className="border-r border-black text-center w-12 font-bold">Bil. Hari</th><th className="text-center w-16 font-bold">RM</th></tr></thead><tbody><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Sarapan Pagi</td><td className="border-r border-black"></td><td className="border-r border-black"></td><td></td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Tengah Hari</td><td className="border-r border-black"></td><td className="border-r border-black"></td><td></td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Malam</td><td className="border-r border-black"></td><td className="border-r border-black"></td><td></td></tr><tr className="font-bold border-b-[1.5px] border-black bg-white"><td colSpan={3} className="text-right pr-4 py-1">Jumlah</td><td></td></tr></tbody></table><div className="px-2 py-2 text-[8pt]">Elaun Makan x ............ sebanyak RM ............... /hari</div><div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]"><span>Jumlah (RM)</span><span></span></div><div className="font-bold px-2 py-1 border-b border-black uppercase bg-gray-50/30">ELAUN HARIAN</div><div className="px-2 py-2 text-[8pt]">Elaun Harian x ............ sebanyak RM ............... /hari</div><div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]"><span>Jumlah (RM)</span><span></span></div><div className="flex justify-between px-2 font-black py-2 bg-gray-100 uppercase border-b border-black"><span>Jumlah (RM)</span><span></span></div></td>
+              <tr className="border-t-[1.5px] border-black font-bold">
+                <td colSpan={4} className="text-right pr-4 py-2 uppercase text-[9.5pt]">Jumlah</td>
+                <td className="text-right px-2 py-2 text-[9.5pt]">{mileageTotal.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
-          <div className="border-t border-black bg-gray-100 flex justify-end px-4 py-2 font-black text-[11pt] uppercase">JUMLAH (BAHAGIAN A) RM {partATotal.toFixed(2)}</div>
+
+          <div className="text-center font-bold py-1 uppercase text-[10pt] border-y-[1.5px] border-black bg-white">TUNTUTAN TAMBANG PENGANGKUTAN AWAM</div>
+          <table className="w-full border-collapse">
+            <tbody className="text-[9.5pt]">
+              <tr className="border-b border-black">
+                <td className="w-[80%] px-4 py-1 leading-6">Teksi/Kereta Sewa [Resit ..........................................................................]</td>
+                <td className="border-l border-black w-10 text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.teksi > 0 ? data.transport.teksi.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-1 leading-6">Bas [Resit ............................................................................................................]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.bas > 0 ? data.transport.bas.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-1 leading-6">Kereta Api [Resit ................................................................................................]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.keretaApi > 0 ? data.transport.keretaApi.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-1 leading-6">Feri [Resit ...........................................................................................................]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.feri > 0 ? data.transport.feri.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b-[1.5px] border-black">
+                <td className="px-4 py-1 leading-6">Lain-Lain [Resit......................................................................................................]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.lainLain > 0 ? data.transport.lainLain.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="font-bold text-[10pt]">
+                <td className="text-right pr-4 py-1.5 uppercase tracking-wide">Jumlah</td>
+                <td className="border-l border-black text-center">RM</td>
+                <td className="border-l border-black text-right px-2">{transportTotal.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table className="w-full border-collapse border-t-[1.5px] border-black">
+            <thead>
+              <tr className="text-[8.5pt]">
+                <th className="w-1/2 border-r border-black font-bold py-1 uppercase text-center px-1">TUNTUTAN ELAUN MAKAN/ ELAUN HARIAN<br/>(SEMENANJUNG MALAYSIA)</th>
+                <th className="w-1/2 font-bold py-1 uppercase text-center px-1">TUNTUTAN ELAUN MAKAN/ ELAUN HARIAN<br/>(SABAH/ SARAWAK/ LABUAN)</th>
+              </tr>
+            </thead>
+            <tbody className="text-[8.5pt]">
+              <tr>
+                {/* SEMENANJUNG */}
+                <td className="border-r border-black p-0 align-top">
+                  <div className="font-bold px-2 py-1 border-y border-black uppercase bg-gray-50/30">ELAUN MAKAN</div>
+                  <table className="w-full border-none border-collapse">
+                    <thead>
+                      <tr className="border-b border-black text-[8pt] bg-white">
+                        <th className="border-r border-black text-left px-2 w-1/2 font-bold py-1">Bahagian Makan</th>
+                        <th className="border-r border-black text-center w-12 font-bold py-1">Bil. Dituntut</th>
+                        <th className="border-r border-black text-center w-12 font-bold py-1">Bil. Hari</th>
+                        <th className="text-center w-16 font-bold py-1">RM</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-black">
+                        <td className="border-r border-black px-2 py-1">• Sarapan Pagi</td>
+                        <td className="border-r border-black text-center">{data.meals.sarapan.bil || ''}</td>
+                        <td className="border-r border-black text-center">{data.meals.sarapan.hari || ''}</td>
+                        <td className="text-right px-2">{(data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar).toFixed(2)}</td>
+                      </tr>
+                      <tr className="border-b border-black">
+                        <td className="border-r border-black px-2 py-1">• Makan Tengah Hari</td>
+                        <td className="border-r border-black text-center">{data.meals.makanTengahHari.bil || ''}</td>
+                        <td className="border-r border-black text-center">{data.meals.makanTengahHari.hari || ''}</td>
+                        <td className="text-right px-2">{(data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar).toFixed(2)}</td>
+                      </tr>
+                      <tr className="border-b border-black">
+                        <td className="border-r border-black px-2 py-1">• Makan Malam</td>
+                        <td className="border-r border-black text-center">{data.meals.makanMalam.bil || ''}</td>
+                        <td className="border-r border-black text-center">{data.meals.makanMalam.hari || ''}</td>
+                        <td className="text-right px-2">{(data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar).toFixed(2)}</td>
+                      </tr>
+                      <tr className="font-bold border-b-[1.5px] border-black bg-white">
+                        <td colSpan={3} className="text-right pr-4 py-1 uppercase">Jumlah</td>
+                        <td className="text-right px-2 py-1">{mealTotal.toFixed(2)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div className="px-2 py-2 text-[8pt] flex items-center gap-1">
+                    Elaun Makan x <span className="font-bold border-b border-black w-8 text-center">{data.meals.sarapan.hari || '....'}</span> sebanyak RM <span className="font-bold border-b border-black w-12 text-center">{mealTotal > 0 ? (mealTotal / (data.meals.sarapan.hari || 1)).toFixed(2) : '...........'}</span> /hari
+                  </div>
+                  <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]">
+                    <span>Jumlah (RM)</span>
+                    <span className="font-black border-b border-black min-w-[60px] text-right">{mealTotal.toFixed(2)}</span>
+                  </div>
+                  <div className="font-bold px-2 py-1 border-b border-black uppercase bg-gray-50/30">ELAUN HARIAN</div>
+                  <div className="px-2 py-2 text-[8pt]">
+                    Elaun Harian x <span className="font-bold border-b border-black w-8 text-center">{data.meals.harian.hari || '....'}</span> sebanyak RM <span className="font-bold border-b border-black w-12 text-center">{data.meals.harian.kadar.toFixed(2)}</span> /hari
+                  </div>
+                  <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]">
+                    <span>Jumlah (RM)</span>
+                    <span className="font-black border-b border-black min-w-[60px] text-right">{harianTotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between px-2 font-black py-2 bg-gray-100 uppercase text-[9pt] border-b border-black">
+                    <span>Jumlah (RM)</span>
+                    <span className="text-right">RM {sectionAMealHarianTotal.toFixed(2)}</span>
+                  </div>
+                </td>
+                {/* SABAH / SARAWAK */}
+                <td className="align-top p-0">
+                  <div className="font-bold px-2 py-1 border-y border-black uppercase bg-gray-50/30">ELAUN MAKAN</div>
+                  <table className="w-full border-none border-collapse">
+                    <thead>
+                      <tr className="border-b border-black text-[8pt] bg-white">
+                        <th className="border-r border-black text-left px-2 w-1/2 font-bold py-1">Bahagian Makan</th>
+                        <th className="border-r border-black text-center w-12 font-bold py-1">Bil. Dituntut</th>
+                        <th className="border-r border-black text-center w-12 font-bold py-1">Bil. Hari</th>
+                        <th className="text-center w-16 font-bold py-1">RM</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-black">
+                        <td className="border-r border-black px-2 py-1">• Sarapan Pagi</td>
+                        <td className="border-r border-black text-center"></td>
+                        <td className="border-r border-black text-center"></td>
+                        <td className="text-right px-2"></td>
+                      </tr>
+                      <tr className="border-b border-black">
+                        <td className="border-r border-black px-2 py-1">• Makan Tengah Hari</td>
+                        <td className="border-r border-black text-center"></td>
+                        <td className="border-r border-black text-center"></td>
+                        <td className="text-right px-2"></td>
+                      </tr>
+                      <tr className="border-b border-black">
+                        <td className="border-r border-black px-2 py-1">• Makan Malam</td>
+                        <td className="border-r border-black text-center"></td>
+                        <td className="border-r border-black text-center"></td>
+                        <td className="text-right px-2"></td>
+                      </tr>
+                      <tr className="font-bold border-b-[1.5px] border-black bg-white">
+                        <td colSpan={3} className="text-right pr-4 py-1 uppercase">Jumlah</td>
+                        <td className="text-right px-2 py-1"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div className="px-2 py-2 text-[8pt]">
+                    Elaun Makan x ............. sebanyak RM ............... /hari
+                  </div>
+                  <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]">
+                    <span>Jumlah (RM)</span>
+                    <span className="border-b border-black min-w-[60px] text-right"></span>
+                  </div>
+                  <div className="font-bold px-2 py-1 border-b border-black uppercase bg-gray-50/30">ELAUN HARIAN</div>
+                  <div className="px-2 py-2 text-[8pt]">
+                    Elaun Harian x ............. sebanyak RM ............... /hari
+                  </div>
+                  <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]">
+                    <span>Jumlah (RM)</span>
+                    <span className="border-b border-black min-w-[60px] text-right"></span>
+                  </div>
+                  <div className="flex justify-between px-2 font-black py-2 bg-gray-100 uppercase text-[9pt] border-b border-black">
+                    <span>Jumlah (RM)</span>
+                    <span className="text-right"></span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="border-t border-black bg-gray-100 flex justify-end px-4 py-2 font-black text-[11pt] uppercase">
+            <span>JUMLAH (BAHAGIAN A) RM {partATotal.toFixed(2)}</span>
+          </div>
         </div>
 
         <div className="page-break"></div>
 
-        {/* ========================================================== */}
-        {/* MUKA SURAT 4: BAHAGIAN B (IKUT SCREENSHOT) */}
-        {/* ========================================================== */}
-        <div className="border-[1.5px] border-black">
+        {/* MUKA SURAT 4: BAHAGIAN B */}
+        <div className="border-[1.5px] border-black mt-6">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white">BAHAGIAN B</div>
           <table className="w-full border-collapse">
             <thead>
               <tr className="text-[8.5pt]">
-                <th className="w-1/2 border-r border-black font-bold py-2 uppercase text-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SEMENANJUNG MALAYSIA)</th>
-                <th className="w-1/2 font-bold py-2 uppercase text-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SABAH/ SARAWAK /LABUAN)</th>
+                <th className="w-1/2 border-r border-black font-bold py-2 uppercase text-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)</th>
+                <th className="w-1/2 font-bold py-2 uppercase text-center">TUNTUTAN ELAUN LOJING</th>
               </tr>
             </thead>
             <tbody className="text-[8.5pt]">
-              {/* BSH Row 1 */}
               <tr className="border-t border-black">
-                <td className="border-r border-black p-2 align-top relative min-h-[90px]">
-                  {hotels[0] ? (
-                    <><div className="leading-tight">BSH x <span className="font-bold">{hotels[0].bilangan}</span> sebanyak RM <span className="font-bold">{hotels[0].kadar.toFixed(2)}</span>/hari.</div><div className="text-[7.5pt] mt-1 leading-tight">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[7.5pt] mt-6">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold">{(hotels[0].bilangan * hotels[0].kadar).toFixed(2)}</div></div></>
-                  ) : (
-                    <><div className="leading-tight">BSH x ................. sebanyak RM ................./hari.</div><div className="text-[7.5pt] mt-1 leading-tight">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[7.5pt] mt-6">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1"></div></div></>
-                  )}
+                <td className="border-r border-black p-2 align-top relative min-h-[80px]">
+                  {hotels.map((h, idx) => (
+                    <div key={idx} className="mb-2 font-bold">BSH x {h.bilangan} = RM {(h.bilangan * h.kadar).toFixed(2)}</div>
+                  ))}
+                  <div className="text-[7pt] mt-4 italic">[Disertakan dengan resit asal]</div>
                 </td>
-                <td className="p-2 align-top relative min-h-[90px]">
-                  <div className="leading-tight">BSH x ................. sebanyak RM ................./hari.</div><div className="text-[7.5pt] mt-1 leading-tight">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[7.5pt] mt-6">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1"></div></div>
-                </td>
-              </tr>
-              {/* BSH Row 2 */}
-              <tr className="border-t border-black">
-                <td className="border-r border-black p-2 align-top relative min-h-[90px]">
-                   {hotels[1] ? (
-                    <><div className="leading-tight">BSH x <span className="font-bold">{hotels[1].bilangan}</span> sebanyak RM <span className="font-bold">{hotels[1].kadar.toFixed(2)}</span>/hari.</div><div className="text-[7.5pt] mt-1 leading-tight">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[7.5pt] mt-6">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold">{(hotels[1].bilangan * hotels[1].kadar).toFixed(2)}</div></div></>
-                  ) : (
-                    <><div className="leading-tight">BSH x ................. sebanyak RM ................./hari.</div><div className="text-[7.5pt] mt-1 leading-tight">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[7.5pt] mt-6">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1"></div></div></>
-                  )}
-                </td>
-                <td className="p-2 align-top relative min-h-[90px]">
-                  <div className="leading-tight">BSH x ................. sebanyak RM ................./hari.</div><div className="text-[7.5pt] mt-1 leading-tight">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[7.5pt] mt-6">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1"></div></div>
+                <td className="p-2 align-top">
+                  {lojingsOnly.map((l, idx) => (
+                    <div key={idx} className="mb-2 font-bold">Lojing x {l.bilangan} = RM {(l.bilangan * l.kadar).toFixed(2)}</div>
+                  ))}
                 </td>
               </tr>
-              {/* Lojing Headers */}
-              <tr className="border-t border-black font-bold">
-                <td className="border-r border-black py-2 uppercase text-center">TUNTUTAN ELAUN LOJING<br/>(SEMENANJUNG MALAYSIA)</td>
-                <td className="py-2 uppercase text-center">TUNTUTAN ELAUN LOJING<br/>(SABAH/ SARAWAK /LABUAN)</td>
-              </tr>
-              {/* Lojing Calculations */}
-              <tr className="border-t border-black">
-                <td className="border-r border-black p-2 align-top relative min-h-[45px]">
-                  {lojingsOnly[0] ? (
-                    <><div className="leading-tight">Elaun Lojing x <span className="font-bold">{lojingsOnly[0].bilangan}</span> sebanyak RM <span className="font-bold">{lojingsOnly[0].kadar.toFixed(2)}</span>/hari.</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold">{(lojingsOnly[0].bilangan * lojingsOnly[0].kadar).toFixed(2)}</div></div></>
-                  ) : (
-                    <><div className="leading-tight">Elaun Lojing x ............ sebanyak RM ............/hari.</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1"></div></div></>
-                  )}
-                </td>
-                <td className="p-2 align-top relative min-h-[45px]">
-                  <div className="leading-tight">Elaun Lojing x ............ sebanyak RM ............/hari.</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div><div className="flex-1"></div></div>
-                </td>
-              </tr>
-              {/* Lojing Address 1 */}
-              <tr className="border-t border-black min-h-[140px]">
-                <td className="border-r border-black p-3 align-top">
-                   <div className="text-[8pt] mb-2 leading-relaxed">Tarikh Lojing: <span className="font-bold">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : '.........................'}</span></div>
-                   <div className="text-[8pt] leading-relaxed">Alamat Lojing: <br/> <span className="font-bold">{lojingsOnly[0]?.alamat || '........................................................................................................................................................................................................................................................................................................'}</span></div>
-                </td>
-                <td className="p-3 align-top">
-                   <div className="text-[8pt] mb-2 leading-relaxed">Tarikh Lojing: .........................</div>
-                   <div className="text-[8pt] leading-relaxed">Alamat Lojing: <br/> ........................................................................................................................................................................................................................................................................................................</div>
-                </td>
-              </tr>
-              {/* Lojing Address 2 */}
-              <tr className="border-t border-black min-h-[140px]">
-                <td className="border-r border-black p-3 align-top">
-                   <div className="text-[8pt] mb-2 leading-relaxed">Tarikh Lojing: <span className="font-bold">{lojingsOnly[1]?.tarikh ? formatDate(lojingsOnly[1].tarikh) : '.........................'}</span></div>
-                   <div className="text-[8pt] leading-relaxed">Alamat Lojing: <br/> <span className="font-bold">{lojingsOnly[1]?.alamat || '........................................................................................................................................................................................................................................................................................................'}</span></div>
-                </td>
-                <td className="p-3 align-top">
-                   <div className="text-[8pt] mb-2 leading-relaxed">Tarikh Lojing: .........................</div>
-                   <div className="text-[8pt] leading-relaxed">Alamat Lojing: <br/> ........................................................................................................................................................................................................................................................................................................</div>
-                </td>
-              </tr>
-              {/* Subtotals */}
-              <tr className="border-t-[1.5px] border-black font-bold">
-                <td className="border-r border-black p-1 text-right pr-24 relative uppercase">Jumlah
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center">RM</div><div className="flex-1 flex items-center justify-end px-2">{partBTotal.toFixed(2)}</div></div>
-                </td>
-                <td className="p-1 text-right pr-24 relative uppercase">Jumlah
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center">RM</div><div className="flex-1"></div></div>
-                </td>
-              </tr>
-              {/* Grand Total Bahagian B */}
               <tr className="border-t border-black font-black bg-gray-50/30">
                 <td colSpan={2} className="text-right p-2 pr-24 relative uppercase">JUMLAH (BAHAGIAN B)
                   <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex items-center justify-between px-2 bg-white">
@@ -465,11 +517,10 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             </tbody>
           </table>
         </div>
-        <div className="text-[7pt] italic mt-1 font-medium">- Sila tambah ruangan jika tidak mencukupi.</div>
-
-        <div className="page-break"></div>
 
         {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN */}
+        <div className="page-break"></div>
+        
         <div className="border-[1.5px] border-black mt-10">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
           <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">BELANJA PELBAGAI</div>
