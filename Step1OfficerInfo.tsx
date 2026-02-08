@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { OfficerInfo } from '../types';
+import { OfficerInfo } from './types';
 
 interface Props {
   info: OfficerInfo;
@@ -84,7 +84,7 @@ const Step1OfficerInfo: React.FC<Props> = ({ info, onChange }) => {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-gray-600">No. Telefon (Pejabat/Bimbit)</label>
+            <label className="text-sm font-semibold text-gray-600">No. Telefon</label>
             <input 
               name="telefon" value={info.telefon} onChange={handleChange}
               className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" 
@@ -136,7 +136,7 @@ const Step1OfficerInfo: React.FC<Props> = ({ info, onChange }) => {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-gray-600">Alamat Rumah Pegawai</label>
+            <label className="text-sm font-semibold text-gray-600">Alamat Rumah</label>
             <textarea 
               name="alamatRumah" value={info.alamatRumah} onChange={handleChange}
               className="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none h-24" 
