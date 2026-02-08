@@ -15,6 +15,24 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
     onMiscChange({ [name]: parseFloat(value) || 0 });
   };
 
+  // Helper Formatter
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const [year, month, day] = parts;
+    return `${day}/${month}/${year}`;
+  };
+
+  const formatTime = (timeStr: string) => {
+    if (!timeStr) return '';
+    let [hours, minutes] = timeStr.split(':').map(Number);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+  };
+
   // Calculations
   const totalKm = data.logs.reduce((sum, j) => sum + j.pergi.jarak + (j.adaBalik ? j.balik.jarak : 0), 0);
   const totalTolLogs = data.logs.reduce((sum, j) => sum + j.pergi.tol + (j.adaBalik ? j.balik.tol : 0), 0);
@@ -32,6 +50,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   
   const mealTotal = 
     (data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar) +
+    // Fix: Changed 'mengahHari' to 'makanTengahHari' to match the MealAllowance interface
     (data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar) +
     (data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar);
 
@@ -241,9 +260,9 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
         <table>
           <thead>
             <tr className="bg-gray-100">
-              <th className="w-[18%] text-center py-2" rowSpan={2}>Tarikh & Butiran Tol</th>
+              <th className="w-[15%] text-center py-2" rowSpan={2}>Tarikh</th>
               <th className="text-center py-2" colSpan={2}>Waktu</th>
-              <th className="text-center py-2" rowSpan={2}>Tujuan/Tempat</th>
+              <th className="text-center py-2" rowSpan={2}>Tujuan / Tempat / Butiran Tol</th>
               <th className="w-[12%] text-center py-2" rowSpan={2}>Jarak (KM)</th>
             </tr>
             <tr className="bg-gray-100">
@@ -255,36 +274,16 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             {data.logs.map((j, i) => (
               <React.Fragment key={i}>
                 <tr>
-                  {/* KOLUM TARIKH DENGAN BUTIRAN TOL */}
-                  <td className="text-center align-middle p-2" rowSpan={j.adaBalik ? 2 : 1}>
-                    <div className="font-bold border-b border-gray-100 pb-1 mb-1">{j.tarikh}</div>
-                    
-                    {/* Butiran Tol Pergi */}
-                    {(j.pergi.tolMasuk || j.pergi.tolKeluar) && (
-                      <div className="text-[7pt] text-gray-600 leading-tight mb-2">
-                        <div className="font-bold text-[6.5pt] uppercase text-blue-700">Tol (P):</div>
-                        <div className="italic">
-                          {j.pergi.tolMasuk || 'M'} → {j.pergi.tolKeluar || 'K'}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Butiran Tol Balik (Hanya jika adaBalik) */}
-                    {j.adaBalik && (j.balik.tolMasuk || j.balik.tolKeluar) && (
-                      <div className="text-[7pt] text-gray-600 leading-tight border-t border-gray-100 pt-1 mt-1">
-                        <div className="font-bold text-[6.5pt] uppercase text-amber-700">Tol (B):</div>
-                        <div className="italic">
-                          {j.balik.tolMasuk || 'M'} → {j.balik.tolKeluar || 'K'}
-                        </div>
-                      </div>
-                    )}
+                  {/* KOLUM TARIKH FORMAT DD/MM/YYYY */}
+                  <td className="text-center align-middle p-2 font-bold" rowSpan={j.adaBalik ? 2 : 1}>
+                    {formatDate(j.tarikh)}
                   </td>
 
-                  <td className="text-center py-4">{j.pergi.waktuBertolak}</td>
-                  <td className="text-center py-4">{j.pergi.waktuSampai}</td>
+                  <td className="text-center py-4">{formatTime(j.pergi.waktuBertolak)}</td>
+                  <td className="text-center py-4">{formatTime(j.pergi.waktuSampai)}</td>
                   <td className="px-3 py-4 leading-normal">
                     <div className="font-bold mb-1 uppercase text-[8.5pt]">{j.tujuan}</div>
-                    <div className="text-[8pt]">
+                    <div className="text-[8pt] mb-1">
                       Dari {j.pergi.dari} ke {j.pergi.ke}
                     </div>
                   </td>
@@ -293,10 +292,10 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
                 {j.adaBalik && (
                   <tr>
-                    <td className="text-center py-4 border-l-0">{j.balik.waktuBertolak}</td>
-                    <td className="text-center py-4">{j.balik.waktuSampai}</td>
+                    <td className="text-center py-4 border-l-0">{formatTime(j.balik.waktuBertolak)}</td>
+                    <td className="text-center py-4">{formatTime(j.balik.waktuSampai)}</td>
                     <td className="px-3 py-4 leading-normal">
-                      <div className="text-[8pt]">
+                      <div className="text-[8pt] mb-1">
                          Dari {j.balik.dari} ke {j.balik.ke}
                       </div>
                     </td>
