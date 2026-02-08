@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ClaimState, MiscExpenses } from './types';
 import { KADAR_KERETA, KADAR_MOTOSIKAL } from './constants';
@@ -236,53 +237,56 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 2 & SETERUSNYA: KENYATAAN TUNTUTAN */}
+        {/* MUKA SURAT 2: KENYATAAN TUNTUTAN (IKUT SCREENSHOT) */}
         <div className="title-box">KENYATAAN TUNTUTAN</div>
         <table>
-          <thead className="text-[9pt]">
+          <thead>
             <tr className="bg-gray-100">
-              <th className="w-16" rowSpan={2}>Tarikh</th>
-              <th colSpan={2}>Waktu</th>
-              <th rowSpan={2}>Tujuan/Tempat</th>
-              <th className="w-20" rowSpan={2}>Tambang / Jarak</th>
+              <th className="w-[15%] text-center py-2" rowSpan={2}>Tarikh</th>
+              <th className="text-center py-2" colSpan={2}>Waktu</th>
+              <th className="text-center py-2" rowSpan={2}>Tujuan/Tempat</th>
+              <th className="w-[15%] text-center py-2" rowSpan={2}>Tambang / Jarak</th>
             </tr>
             <tr className="bg-gray-100">
-              <th className="w-16">Bertolak</th>
-              <th className="w-16">Sampai</th>
+              <th className="w-[12%] text-center py-2">Bertolak</th>
+              <th className="w-[12%] text-center py-2">Sampai</th>
             </tr>
           </thead>
-          <tbody className="text-[9pt]">
+          <tbody className="text-[9.5pt]">
             {data.logs.map((j, i) => (
               <React.Fragment key={i}>
-                {/* Pergi */}
+                {/* Baris 1: Perjalanan Pergi */}
                 <tr>
-                  <td className="text-center font-bold" rowSpan={j.adaBalik ? 3 : 2}>{j.tarikh}</td>
-                  <td className="text-center">{j.pergi.waktuBertolak}</td>
-                  <td className="text-center">{j.pergi.waktuSampai}</td>
-                  <td className="leading-tight">
-                    <div className="font-bold mb-1">{j.tujuan.toUpperCase()}</div>
-                    Dari {j.pergi.dari} ke {j.pergi.ke} dengan memandu {data.info.kenderaanJenis.toLowerCase()} sendiri
+                  <td className="text-center align-middle font-normal" rowSpan={j.adaBalik ? 2 : 1}>
+                    {j.tarikh}
                   </td>
-                  <td className="text-center">{j.pergi.jarak.toFixed(1)} km</td>
+                  <td className="text-center py-4">{j.pergi.waktuBertolak}</td>
+                  <td className="text-center py-4">{j.pergi.waktuSampai}</td>
+                  <td className="px-3 py-4 leading-normal">
+                    <div className="font-bold mb-2 uppercase">{j.tujuan}</div>
+                    <div>
+                      Dari {j.pergi.dari} ke {j.pergi.ke} dengan memandu {data.info.kenderaanJenis.toLowerCase()} sendiri
+                    </div>
+                  </td>
+                  <td className="text-center py-4">{j.pergi.jarak.toFixed(1)} km</td>
                 </tr>
-                {/* Balik (Jika ada) */}
+                {/* Baris 2: Perjalanan Balik (Jika ada) */}
                 {j.adaBalik && (
                   <tr>
-                    <td className="text-center">{j.balik.waktuBertolak}</td>
-                    <td className="text-center">{j.balik.waktuSampai}</td>
-                    <td className="leading-tight">
-                       Dari {j.balik.dari} ke {j.balik.ke} dengan memandu {data.info.kenderaanJenis.toLowerCase()} sendiri
+                    <td className="text-center py-4 border-l-0">{j.balik.waktuBertolak}</td>
+                    <td className="text-center py-4">{j.balik.waktuSampai}</td>
+                    <td className="px-3 py-4 leading-normal">
+                      Dari {j.balik.dari} ke {j.balik.ke} dengan memandu {data.info.kenderaanJenis.toLowerCase()} sendiri
                     </td>
-                    <td className="text-center">{j.balik.jarak.toFixed(1)} km</td>
+                    <td className="text-center py-4">{j.balik.jarak.toFixed(1)} km</td>
                   </tr>
                 )}
-                {/* Ruang Kosong Pemisah */}
-                <tr><td colSpan={4} className="border-none py-1"></td></tr>
               </React.Fragment>
             ))}
-            <tr className="bg-gray-50 font-bold">
-              <td colSpan={4} className="text-right py-2 uppercase">Jumlah Jarak Tuntutan Elaun Kenderaan:</td>
-              <td className="text-center py-2">{totalKm.toFixed(1)} KM</td>
+            {/* Baris Jumlah di hujung jadual */}
+            <tr className="font-bold bg-gray-50">
+              <td colSpan={4} className="text-right py-3 pr-4 uppercase">Jumlah Jarak Tuntutan Elaun Kenderaan:</td>
+              <td className="text-center py-3">{totalKm.toFixed(1)} KM</td>
             </tr>
           </tbody>
         </table>
@@ -290,7 +294,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 5: BAHAGIAN A */}
+        {/* MUKA SURAT 3: BAHAGIAN A */}
         <div className="title-box">BAHAGIAN A</div>
         <div className="font-bold text-center mb-2 uppercase">ELAUN PERJALANAN KENDERAAN</div>
         <table>
@@ -359,7 +363,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 6: BAHAGIAN B */}
+        {/* MUKA SURAT 4: BAHAGIAN B */}
         <div className="title-box">BAHAGIAN B</div>
         <div className="grid grid-cols-2 gap-0">
           <div className="border border-black p-2 font-bold text-center uppercase text-[8pt]">Tuntutan Bayaran Sewa Hotel (BSH) (Semenanjung Malaysia)</div>
@@ -393,7 +397,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 7: BAHAGIAN C & PENGAKUAN */}
+        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN */}
         <div className="title-box">BAHAGIAN C</div>
         <div className="font-bold text-center mb-2 uppercase">BELANJA PELBAGAI</div>
         <table>
@@ -434,7 +438,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 8: PENGESAHAN & PENDAHULUAN */}
+        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN */}
         <div className="title-box">PENGESAHAN</div>
         <div className="border border-black p-4">
            <p className="text-[9pt]">Berdasarkan pengakuan yang dibuat oleh pemohon, disahkan bahawa perjalanan tersebut telah dilaksanakan atas urusan rasmi dan kelayakan tuntutan pegawai mematuhi peraturan kewangan yang berkuat kuasa.</p>
