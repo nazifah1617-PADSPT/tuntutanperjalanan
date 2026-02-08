@@ -34,8 +34,8 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   };
 
   // Calculations
-  const totalKm = data.logs.reduce((sum, j) => sum + j.pergi.jarak + (j.adaBalik ? j.balik.jarak : 0), 0);
-  const totalTolLogs = data.logs.reduce((sum, j) => sum + j.pergi.tol + (j.adaBalik ? j.balik.tol : 0), 0);
+  const totalKm = data.logs.reduce((sum, j) => sum + (Number(j.pergi.jarak) || 0) + (j.adaBalik ? (Number(j.balik.jarak) || 0) : 0), 0);
+  const totalTolLogs = data.logs.reduce((sum, j) => sum + (Number(j.pergi.tol) || 0) + (j.adaBalik ? (Number(j.balik.tol) || 0) : 0), 0);
   
   const isKereta = data.info.kenderaanJenis === 'Kereta';
   const kadar = isKereta ? KADAR_KERETA : KADAR_MOTOSIKAL;
@@ -46,28 +46,34 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   const amt2 = km2 * kadar.seterusnya;
   const mileageTotal = amt1 + amt2;
 
-  const transportTotal = data.transport.teksi + data.transport.bas + data.transport.keretaApi + data.transport.feri + data.transport.lainLain;
+  const transportTotal = (Number(data.transport.teksi) || 0) + (Number(data.transport.bas) || 0) + (Number(data.transport.keretaApi) || 0) + (Number(data.transport.feri) || 0) + (Number(data.transport.lainLain) || 0);
   
   const mealTotal = 
-    (data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar) +
-    (data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar) +
-    (data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar);
+    ((Number(data.meals.sarapan.bil) || 0) * (Number(data.meals.sarapan.hari) || 0) * (Number(data.meals.sarapan.kadar) || 0)) +
+    ((Number(data.meals.makanTengahHari.bil) || 0) * (Number(data.meals.makanTengahHari.hari) || 0) * (Number(data.meals.makanTengahHari.kadar) || 0)) +
+    ((Number(data.meals.makanMalam.bil) || 0) * (Number(data.meals.makanMalam.hari) || 0) * (Number(data.meals.makanMalam.kadar) || 0));
 
-  const harianTotal = (data.meals.harian.bil * data.meals.harian.hari * data.meals.harian.kadar);
+  const harianTotal = ((Number(data.meals.harian.bil) || 0) * (Number(data.meals.harian.hari) || 0) * (Number(data.meals.harian.kadar) || 0));
   
   const sectionAMealHarianTotal = mealTotal + harianTotal;
   const partATotal = mileageTotal + transportTotal + sectionAMealHarianTotal;
-  const partBTotal = data.lodgings.reduce((sum, l) => sum + (l.bilangan * l.kadar), 0);
+  const partBTotal = data.lodgings.reduce((sum, l) => sum + ((Number(l.bilangan) || 0) * (Number(l.kadar) || 0)), 0);
   
-  const miscManualTotal = (Object.entries(data.misc)
-    .filter(([key]) => key !== 'tol' && key !== 'saringan' && key !== 'kemasukanPremis')
-    .map(([_, v]) => v) as number[])
-    .reduce((sum, val) => sum + val, 0);
+  // Safe calculation for Misc
+  const getMiscVal = (key: keyof MiscExpenses) => Number(data.misc[key]) || 0;
+
+  const miscManualTotal = 
+    getMiscVal('telefon') + 
+    getMiscVal('pos') + 
+    getMiscVal('dobi') + 
+    getMiscVal('airportTax') + 
+    getMiscVal('lebihanBagasi') + 
+    getMiscVal('parking');
   
-  const miscTotal = miscManualTotal + totalTolLogs + data.misc.tol + data.misc.saringan + data.misc.kemasukanPremis;
+  const miscTotal = miscManualTotal + totalTolLogs + getMiscVal('tol') + getMiscVal('saringan') + getMiscVal('kemasukanPremis');
   
   const grandTotal = partATotal + partBTotal + miscTotal;
-  const nettTotal = grandTotal - data.advance;
+  const nettTotal = grandTotal - (Number(data.advance) || 0);
 
   // Split lodgings for Bahagian B display
   const hotels = data.lodgings.filter(l => l.jenis === 'Hotel');
@@ -229,13 +235,13 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                   <td className="px-3 py-4 leading-normal">
                     <div className="font-bold mb-1 uppercase text-[8.5pt]">{j.tujuan}</div>
                     <div className="text-[8pt] mb-1 italic">Dari {j.pergi.dari} ke {j.pergi.ke}</div>
-                    {(j.pergi.tol > 0) && (
+                    {(Number(j.pergi.tol) > 0) && (
                       <div className="text-[7.5pt] text-blue-700 mt-2 pt-2 border-t border-gray-100">
-                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'} (RM {j.pergi.tol.toFixed(2)})
+                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'} (RM {(Number(j.pergi.tol) || 0).toFixed(2)})
                       </div>
                     )}
                   </td>
-                  <td className="text-center py-4">{j.pergi.jarak.toFixed(1)}</td>
+                  <td className="text-center py-4">{(Number(j.pergi.jarak) || 0).toFixed(1)}</td>
                 </tr>
                 {j.adaBalik && (
                   <tr>
@@ -243,13 +249,13 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                     <td className="text-center py-4">{formatTime(j.balik.waktuSampai)}</td>
                     <td className="px-3 py-4 leading-normal">
                       <div className="text-[8pt] mb-1 italic">Dari {j.balik.dari} ke {j.balik.ke}</div>
-                      {(j.balik.tol > 0) && (
+                      {(Number(j.balik.tol) > 0) && (
                         <div className="text-[7.5pt] text-amber-700 mt-2 pt-2 border-t border-gray-100">
-                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'} (RM {j.balik.tol.toFixed(2)})
+                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'} (RM {(Number(j.balik.tol) || 0).toFixed(2)})
                         </div>
                       )}
                     </td>
-                    <td className="text-center py-4">{j.balik.jarak.toFixed(1)}</td>
+                    <td className="text-center py-4">{(Number(j.balik.jarak) || 0).toFixed(1)}</td>
                   </tr>
                 )}
               </React.Fragment>
@@ -315,29 +321,29 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           <table className="w-full border-collapse">
             <tbody className="text-[9.5pt]">
               <tr className="border-b border-black">
-                <td className="w-[80%] px-4 py-1 leading-6">Teksi/Kereta Sewa [Resit ..........................................................................]</td>
+                <td className="px-4 py-1 leading-6">Teksi/Kereta Sewa [Resit ..........................................................................]</td>
                 <td className="border-l border-black w-10 text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.transport.teksi > 0 ? data.transport.teksi.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.teksi > 0 ? (Number(data.transport.teksi) || 0).toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
                 <td className="px-4 py-1 leading-6">Bas [Resit ............................................................................................................]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.transport.bas > 0 ? data.transport.bas.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.bas > 0 ? (Number(data.transport.bas) || 0).toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
                 <td className="px-4 py-1 leading-6">Kereta Api [Resit ................................................................................................]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.transport.keretaApi > 0 ? data.transport.keretaApi.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.keretaApi > 0 ? (Number(data.transport.keretaApi) || 0).toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
                 <td className="px-4 py-1 leading-6">Feri [Resit ...........................................................................................................]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.transport.feri > 0 ? data.transport.feri.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.feri > 0 ? (Number(data.transport.feri) || 0).toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b-[1.5px] border-black">
                 <td className="px-4 py-1 leading-6">Lain-Lain [Resit......................................................................................................]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.transport.lainLain > 0 ? data.transport.lainLain.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.lainLain > 0 ? (Number(data.transport.lainLain) || 0).toFixed(2) : ''}</td>
               </tr>
               <tr className="font-bold text-[10pt]">
                 <td className="text-right pr-4 py-1.5 uppercase tracking-wide">Jumlah</td>
@@ -360,12 +366,12 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                   <div className="font-bold px-2 py-1 border-y border-black uppercase bg-gray-50/30">ELAUN MAKAN</div>
                   <table className="w-full border-none border-collapse text-[8pt]">
                     <thead><tr className="border-b border-black"><th className="border-r border-black text-left px-2 py-1">Bahagian Makan</th><th className="border-r border-black text-center w-12 font-bold">Bil. Dituntut</th><th className="border-r border-black text-center w-12 font-bold">Bil. Hari</th><th className="text-center w-16 font-bold">RM</th></tr></thead>
-                    <tbody><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Sarapan Pagi</td><td className="border-r border-black text-center">{data.meals.sarapan.bil || ''}</td><td className="border-r border-black text-center">{data.meals.sarapan.hari || ''}</td><td className="text-right px-2">{(data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar).toFixed(2)}</td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Tengah Hari</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.hari || ''}</td><td className="text-right px-2">{(data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar).toFixed(2)}</td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Malam</td><td className="border-r border-black text-center">{data.meals.makanMalam.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanMalam.hari || ''}</td><td className="text-right px-2">{(data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar).toFixed(2)}</td></tr><tr className="font-bold border-b-[1.5px] border-black bg-white"><td colSpan={3} className="text-right pr-4 py-1 uppercase">Jumlah</td><td className="text-right px-2 py-1">{mealTotal.toFixed(2)}</td></tr></tbody>
+                    <tbody><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Sarapan Pagi</td><td className="border-r border-black text-center">{data.meals.sarapan.bil || ''}</td><td className="border-r border-black text-center">{data.meals.sarapan.hari || ''}</td><td className="text-right px-2">{((Number(data.meals.sarapan.bil)||0) * (Number(data.meals.sarapan.hari)||0) * (Number(data.meals.sarapan.kadar)||0)).toFixed(2)}</td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Tengah Hari</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.hari || ''}</td><td className="text-right px-2">{((Number(data.meals.makanTengahHari.bil)||0) * (Number(data.meals.makanTengahHari.hari)||0) * (Number(data.meals.makanTengahHari.kadar)||0)).toFixed(2)}</td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Malam</td><td className="border-r border-black text-center">{data.meals.makanMalam.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanMalam.hari || ''}</td><td className="text-right px-2">{((Number(data.meals.makanMalam.bil)||0) * (Number(data.meals.makanMalam.hari)||0) * (Number(data.meals.makanMalam.kadar)||0)).toFixed(2)}</td></tr><tr className="font-bold border-b-[1.5px] border-black bg-white"><td colSpan={3} className="text-right pr-4 py-1 uppercase">Jumlah</td><td className="text-right px-2 py-1">{mealTotal.toFixed(2)}</td></tr></tbody>
                   </table>
-                  <div className="px-2 py-2 text-[8pt]">Elaun Makan x {data.meals.sarapan.hari || '....'} sebanyak RM {mealTotal > 0 ? (mealTotal / (data.meals.sarapan.hari || 1)).toFixed(2) : '...........'} /hari</div>
+                  <div className="px-2 py-2 text-[8pt]">Elaun Makan x {data.meals.sarapan.hari || '....'} sebanyak RM {mealTotal > 0 ? (mealTotal / (Number(data.meals.sarapan.hari) || 1)).toFixed(2) : '...........'} /hari</div>
                   <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]"><span>Jumlah (RM)</span><span>{mealTotal.toFixed(2)}</span></div>
                   <div className="font-bold px-2 py-1 border-b border-black uppercase bg-gray-50/30">ELAUN HARIAN</div>
-                  <div className="px-2 py-2 text-[8pt]">Elaun Harian x {data.meals.harian.hari || '....'} sebanyak RM {data.meals.harian.kadar.toFixed(2)} /hari</div>
+                  <div className="px-2 py-2 text-[8pt]">Elaun Harian x {data.meals.harian.hari || '....'} sebanyak RM {(Number(data.meals.harian.kadar)||0).toFixed(2)} /hari</div>
                   <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]"><span>Jumlah (RM)</span><span>{harianTotal.toFixed(2)}</span></div>
                   <div className="flex justify-between px-2 font-black py-2 bg-gray-100 uppercase border-b border-black"><span>Jumlah (RM)</span><span>RM {sectionAMealHarianTotal.toFixed(2)}</span></div>
                 </td>
@@ -391,10 +397,10 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             <tbody className="text-[8.5pt]">
               <tr className="border-t border-black">
                 <td className="border-r border-black p-3 align-top relative min-h-[100px]">
-                  <div className="leading-6">BSH x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{hotels[0]?.bilangan || ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{hotels[0]?.kadar.toFixed(2) || ''}</span>/hari.</div>
+                  <div className="leading-6">BSH x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{hotels[0]?.bilangan || ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{(Number(hotels[0]?.kadar)||0).toFixed(2) || ''}</span>/hari.</div>
                   <div className="text-[7.5pt] mt-1 italic font-medium">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div>
                   <div className="text-[8pt] mt-8">[Resit <span className="font-bold border-b border-black inline-block min-w-[150px]">{hotels[0] ? 'DISERTAKAN' : ''}</span>]</div>
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{hotels[0] ? (hotels[0].bilangan * hotels[0].kadar).toFixed(2) : ''}</div></div>
+                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{hotels[0] ? ((Number(hotels[0].bilangan)||0) * (Number(hotels[0].kadar)||0)).toFixed(2) : ''}</div></div>
                 </td>
                 <td className="p-3 align-top relative min-h-[100px]"><div className="leading-6">BSH x ................. sebanyak RM ................./hari.</div><div className="text-[7.5pt] mt-1 italic font-medium">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[8pt] mt-8">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1"></div></div></td>
               </tr>
@@ -403,7 +409,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                 <td className="py-2 uppercase text-center px-2">TUNTUTAN ELAUN LOJING<br/>(SABAH/ SARAWAK /WP LABUAN)</td>
               </tr>
               <tr className="border-t border-black">
-                <td className="border-r border-black p-3 align-top relative min-h-[50px]"><div className="leading-6">Elaun Lojing x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + l.bilangan, 0) : ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{lojingsOnly[0]?.kadar.toFixed(2) || ''}</span>/hari</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + (l.bilangan * l.kadar), 0).toFixed(2) : ''}</div></div></td>
+                <td className="border-r border-black p-3 align-top relative min-h-[50px]"><div className="leading-6">Elaun Lojing x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + (Number(l.bilangan)||0), 0) : ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{(Number(lojingsOnly[0]?.kadar)||0).toFixed(2) || ''}</span>/hari</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + ((Number(l.bilangan)||0) * (Number(l.kadar)||0)), 0).toFixed(2) : ''}</div></div></td>
                 <td className="p-3 align-top relative min-h-[50px]"><div className="leading-6">Elaun Lojing x ................. sebanyak RM ................./hari</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1"></div></div></td>
               </tr>
               <tr className="border-t border-black min-h-[140px]">
@@ -427,49 +433,49 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           <table className="w-full border-collapse">
             <tbody className="text-[9.5pt]">
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Telefon, Telegram , Faks [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.telefon > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Telefon, Telegram , Faks [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('telefon') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black w-8 text-center font-bold">RM</td>
-                <td className="border-l border-black w-32 text-right px-2 font-bold">{data.misc.telefon > 0 ? data.misc.telefon.toFixed(2) : ''}</td>
+                <td className="border-l border-black w-32 text-right px-2 font-bold">{getMiscVal('telefon') > 0 ? getMiscVal('telefon').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Pos [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.pos > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Pos [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('pos') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.misc.pos > 0 ? data.misc.pos.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('pos') > 0 ? getMiscVal('pos').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Dobi [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.dobi > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Dobi [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('dobi') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.misc.dobi > 0 ? data.misc.dobi.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('dobi') > 0 ? getMiscVal('dobi').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Cukai Lapangan Terbang [ Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.airportTax > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Cukai Lapangan Terbang [ Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('airportTax') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.misc.airportTax > 0 ? data.misc.airportTax.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('airportTax') > 0 ? getMiscVal('airportTax').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Lebihan Bagasi [ Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.lebihanBagasi > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Lebihan Bagasi [ Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('lebihanBagasi') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.misc.lebihanBagasi > 0 ? data.misc.lebihanBagasi.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('lebihanBagasi') > 0 ? getMiscVal('lebihanBagasi').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Tempat Letak Kereta [Resit/Penyata <i>Touch&Go</i> /Lain-lain <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.parking > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Tempat Letak Kereta [Resit/Penyata <i>Touch&Go</i> /Lain-lain <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('parking') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.misc.parking > 0 ? data.misc.parking.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('parking') > 0 ? getMiscVal('parking').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Tol [Resit/Penyata <i>Touch&Go</i> /RFID/Lain-lain: <span className="font-bold border-b border-black inline-block min-w-[200px]">{(totalTolLogs + data.misc.tol) > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Tol [Resit/Penyata <i>Touch&Go</i> /RFID/Lain-lain: <span className="font-bold border-b border-black inline-block min-w-[200px]">{(totalTolLogs + getMiscVal('tol')) > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{ (totalTolLogs + data.misc.tol) > 0 ? (totalTolLogs + data.misc.tol).toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{ (totalTolLogs + getMiscVal('tol')) > 0 ? (totalTolLogs + getMiscVal('tol')).toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2 leading-tight">Saringan/ Pengesanan/ Vaksin [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.saringan > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Saringan/ Pengesanan/ Vaksin [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('saringan') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.misc.saringan > 0 ? data.misc.saringan.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('saringan') > 0 ? getMiscVal('saringan').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b-[1.5px] border-black">
-                <td className="px-4 py-2 leading-tight">Kemasukan ke Premis/Kawasan [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.kemasukanPremis > 0 ? 'DISERTAKAN' : ''}</span>]</td>
+                <td className="px-4 py-2 leading-tight">Kemasukan ke Premis/Kawasan [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{getMiscVal('kemasukanPremis') > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{data.misc.kemasukanPremis > 0 ? data.misc.kemasukanPremis.toFixed(2) : ''}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('kemasukanPremis') > 0 ? getMiscVal('kemasukanPremis').toFixed(2) : ''}</td>
               </tr>
               <tr className="font-bold text-[10.5pt]">
                 <td className="text-right pr-4 py-2 uppercase">JUMLAH (BAHAGIAN C)</td>
@@ -510,9 +516,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* ========================================================== */}
-        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI (IKUT SCREENSHOT) */}
-        {/* ========================================================== */}
+        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">PENGESAHAN</div>
           <div className="p-4 text-[10pt] text-justify leading-relaxed border-b-[1.5px] border-black">
@@ -553,7 +557,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
               <tr className="border-b border-black">
                 <td className="px-4 py-2.5">Pendahuluan Diri diberi</td>
                 <td className="w-8 text-center border-l border-black font-bold">RM</td>
-                <td className="w-32 text-right px-2 font-bold">{data.advance > 0 ? data.advance.toFixed(2) : ''}</td>
+                <td className="w-32 text-right px-2 font-bold">{getMiscVal('tol') > 0 ? (Number(data.advance)||0).toFixed(2) : (Number(data.advance)||0).toFixed(2)}</td>
               </tr>
               <tr className="border-b border-black">
                 <td className="px-4 py-2.5">Tolak: Tuntutan sekarang</td>
