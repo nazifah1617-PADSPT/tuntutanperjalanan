@@ -1,10 +1,10 @@
 
 import React, { useMemo } from 'react';
-import { JourneyLog, PublicTransport, MealAllowance, ClaimState } from '../types';
+import { JourneyGroup, PublicTransport, MealAllowance } from '../types';
 import { KADAR_KERETA, KADAR_MOTOSIKAL } from '../constants';
 
 interface Props {
-  logs: JourneyLog[];
+  logs: JourneyGroup[];
   vehicleType: 'Kereta' | 'Motosikal';
   transport: PublicTransport;
   meals: MealAllowance;
@@ -13,9 +13,16 @@ interface Props {
 }
 
 const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTransportChange, onMealsChange }) => {
-  const totalKm = logs.reduce((sum, l) => sum + l.jarak, 0);
+  // Aggregate total distance from all journey legs (outbound and optional return)
+  const totalKm = logs.reduce((sum, j) => {
+    const kmPergi = j.pergi.jarak || 0;
+    const kmBalik = j.adaBalik ? (j.balik.jarak || 0) : 0;
+    return sum + kmPergi + kmBalik;
+  }, 0);
+
   const kadar = vehicleType === 'Kereta' ? KADAR_KERETA : KADAR_MOTOSIKAL;
 
+  // Calculate mileage reimbursement based on established tiers (first 500km and subsequent)
   const mileageCalc = useMemo(() => {
     let km1 = Math.min(totalKm, 500);
     let km2 = Math.max(0, totalKm - 500);
@@ -45,7 +52,7 @@ const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTr
 
   return (
     <div className="space-y-10 animate-fadeIn">
-      {/* Mileage */}
+      {/* Mileage calculation table based on vehicle type and total distance */}
       <section>
         <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wide">Bahagian A: Elaun Perjalanan Kenderaan</h2>
         <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-center justify-between mb-6">
@@ -84,7 +91,7 @@ const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTr
         </div>
       </section>
 
-      {/* Public Transport */}
+      {/* Public transport expenses section */}
       <section>
         <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wide">Tuntutan Tambang Pengangkutan Awam</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -109,7 +116,7 @@ const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTr
         </div>
       </section>
 
-      {/* Meals */}
+      {/* Meal and daily allowance reimbursement section */}
       <section>
         <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wide">Tuntutan Elaun Makan / Harian</h2>
         <div className="overflow-x-auto border rounded-xl">

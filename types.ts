@@ -19,10 +19,14 @@ export interface OfficerInfo {
 export interface JourneyLeg {
   waktuBertolak: string;
   waktuSampai: string;
+  tempohJam?: number;
+  tempohMinit?: number;
   dari: string;
   ke: string;
   jarak: number;
   tol: number;
+  tolMasuk?: string;
+  tolKeluar?: string;
 }
 
 export interface JourneyGroup {
@@ -32,17 +36,6 @@ export interface JourneyGroup {
   pergi: JourneyLeg;
   balik: JourneyLeg;
   adaBalik: boolean;
-}
-
-// Untuk keserasian dengan komponen sedia ada
-export interface JourneyLog {
-  id: string;
-  tarikh: string;
-  waktuBertolak: string;
-  waktuSampai: string;
-  butiran: string;
-  jarak: number;
-  tol: number;
 }
 
 export interface PublicTransport {
@@ -80,7 +73,7 @@ export interface MiscExpenses {
 
 export interface ClaimState {
   info: OfficerInfo;
-  logs: JourneyGroup[]; // Menggunakan JourneyGroup untuk UI kad
+  logs: JourneyGroup[];
   transport: PublicTransport;
   meals: MealAllowance;
   lodgings: HotelLodging[];
