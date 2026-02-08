@@ -424,8 +424,10 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
         </div>
 
         {/* ========================================================== */}
-        {/* BAHAGIAN C BERDASARKAN SCREENSHOT */}
+        {/* MUKA SURAT 5: BAHAGIAN C BERDASARKAN SCREENSHOT */}
         {/* ========================================================== */}
+        <div className="page-break"></div>
+        
         <div className="border-[1.5px] border-black mt-10">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
           <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">BELANJA PELBAGAI</div>
@@ -486,30 +488,30 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
         {/* ========================================================== */}
         <div className="border-[1.5px] border-black p-6 mt-8">
           <div className="font-bold uppercase text-center text-[12pt] mb-6 tracking-widest">PENGAKUAN</div>
-          <div className="text-[9.5pt] leading-relaxed space-y-3">
+          <div className="text-[9.5pt] font-medium leading-relaxed space-y-3">
             <p>Saya mengaku bahawa:</p>
             <div className="flex gap-4">
-              <span className="w-6">(a)</span>
+              <span className="w-6 font-bold">(a)</span>
               <p className="flex-1 text-justify">perjalanan pada tarikh-tarikh tersebut adalah benar dan telah dibuat atas urusan rasmi;</p>
             </div>
             <div className="flex gap-4">
-              <span className="w-6">(b)</span>
+              <span className="w-6 font-bold">(b)</span>
               <p className="flex-1 text-justify">tuntutan ini dibuat mengikut kadar dan syarat seperti yang dinyatakan di bawah peraturan bertugas rasmi yang berkuat kuasa dan/atau peraturan berkursus yang berkuat kuasa;</p>
             </div>
             <div className="flex gap-4">
-              <span className="w-6">(c)</span>
+              <span className="w-6 font-bold">(c)</span>
               <p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit berjumlah sebanyak <strong>RM {miscManualTotal.toFixed(2)}</strong> telah sebenarnya dilakukan dan dibayar oleh saya;</p>
             </div>
             <div className="flex gap-4">
-              <span className="w-6">(d)</span>
+              <span className="w-6 font-bold">(d)</span>
               <p className="flex-1 text-justify">semua butiran yang dinyatakan di atas adalah tepat dan benar dan saya bertanggungjawab terhadap semua maklumat yang dinyatakan;</p>
             </div>
             <div className="flex gap-4">
-              <span className="w-6">(e)</span>
+              <span className="w-6 font-bold">(e)</span>
               <p className="flex-1 text-justify">sekiranya saya mengemukakan tuntutan palsu, saya boleh dikenakan tindakan di bawah Seksyen 18, Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [Akta 694] (Kesalahan dengan maksud untuk memperdayakan prinsipal oleh ejen); dan</p>
             </div>
             <div className="flex gap-4">
-              <span className="w-6">(f)</span>
+              <span className="w-6 font-bold">(f)</span>
               <p className="flex-1 text-justify">saya bertanggungjawab untuk menyimpan dokumen sokongan asal (fizikal) dalam tempoh tujuh (7) tahun bagi tujuan pembuktian dan rujukan pihak berkepentingan.</p>
             </div>
           </div>
