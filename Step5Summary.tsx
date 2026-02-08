@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ClaimState, MiscExpenses } from './types';
 import { KADAR_KERETA, KADAR_MOTOSIKAL } from './constants';
@@ -50,7 +49,6 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   
   const mealTotal = 
     (data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar) +
-    // Fix: Changed 'mengahHari' to 'makanTengahHari' to match the MealAllowance interface
     (data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar) +
     (data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar);
 
@@ -283,9 +281,16 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                   <td className="text-center py-4">{formatTime(j.pergi.waktuSampai)}</td>
                   <td className="px-3 py-4 leading-normal">
                     <div className="font-bold mb-1 uppercase text-[8.5pt]">{j.tujuan}</div>
-                    <div className="text-[8pt] mb-1">
+                    <div className="text-[8pt] mb-1 italic">
                       Dari {j.pergi.dari} ke {j.pergi.ke}
                     </div>
+
+                    {/* BUTIRAN TOL DIBAWAH TUJUAN/TEMPAT (PERGI) */}
+                    {(j.pergi.tolMasuk || j.pergi.tolKeluar) && (
+                      <div className="text-[7.5pt] text-blue-700 mt-2 pt-2 border-t border-gray-100">
+                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'}
+                      </div>
+                    )}
                   </td>
                   <td className="text-center py-4">{j.pergi.jarak.toFixed(1)}</td>
                 </tr>
@@ -295,9 +300,16 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                     <td className="text-center py-4 border-l-0">{formatTime(j.balik.waktuBertolak)}</td>
                     <td className="text-center py-4">{formatTime(j.balik.waktuSampai)}</td>
                     <td className="px-3 py-4 leading-normal">
-                      <div className="text-[8pt] mb-1">
+                      <div className="text-[8pt] mb-1 italic">
                          Dari {j.balik.dari} ke {j.balik.ke}
                       </div>
+
+                      {/* BUTIRAN TOL DIBAWAH TUJUAN/TEMPAT (BALIK) */}
+                      {(j.balik.tolMasuk || j.balik.tolKeluar) && (
+                        <div className="text-[7.5pt] text-amber-700 mt-2 pt-2 border-t border-gray-100">
+                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'}
+                        </div>
+                      )}
                     </td>
                     <td className="text-center py-4">{j.balik.jarak.toFixed(1)}</td>
                   </tr>
