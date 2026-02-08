@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>e-Tuntutan WP1.4 - Lampiran C</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
         
         @media print {
             @page {
                 size: A4;
-                margin: 1.5cm;
+                margin: 1cm 1.5cm;
             }
             body { 
                 background: white !important; 
-                font-size: 10pt; 
-                font-family: 'Times New Roman', serif;
+                font-size: 9.5pt; 
+                font-family: "Times New Roman", Times, serif;
                 color: black !important;
+                line-height: 1.2;
             }
             .no-print { display: none !important; }
             .print-only { display: block !important; }
@@ -26,26 +27,40 @@
             table { 
                 width: 100%; 
                 border-collapse: collapse; 
-                margin-bottom: 1rem;
+                margin-bottom: 0px;
+                border: 1.5px solid black !important;
             }
             th, td { 
                 border: 1px solid black !important; 
-                padding: 4px 8px;
+                padding: 3px 6px;
                 vertical-align: top;
+            }
+            th {
+                background-color: #f3f4f6 !important;
+                -webkit-print-color-adjust: exact;
             }
             .border-none, .border-none td {
                 border: none !important;
             }
-            .text-center { text-center: center; }
+            .text-center { text-align: center; }
             .text-right { text-align: right; }
             .font-bold { font-weight: bold; }
             .uppercase { text-transform: uppercase; }
+            .page-break { page-break-before: always; }
             
-            .signature-box {
-                margin-top: 2rem;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
+            .header-right {
+                text-align: right;
+                font-weight: bold;
+                text-decoration: underline;
+                margin-bottom: 10px;
+            }
+            
+            .title-box {
+                text-align: center;
+                font-weight: bold;
+                font-size: 11pt;
+                margin-bottom: 20px;
+                text-transform: uppercase;
             }
         }
         
