@@ -172,7 +172,11 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
         </div>
       </div>
 
+      {/* ========================================================== */}
+      {/* SEKSYEN CETAKAN PDF (IKUT FORMAT WP1.4) */}
+      {/* ========================================================== */}
       <div className="print-only">
+        
         {/* MUKA SURAT 1: MAKLUMAT PEGAWAI */}
         <div className="header-right uppercase">Lampiran C</div>
         <div className="title-box">
@@ -359,20 +363,8 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                 <td className="border-r border-black p-0 align-top">
                   <div className="font-bold px-2 py-1 border-y border-black uppercase bg-gray-50/30">ELAUN MAKAN</div>
                   <table className="w-full border-none border-collapse text-[8pt]">
-                    <thead>
-                      <tr className="border-b border-black">
-                        <th className="border-r border-black text-left px-2 py-1">Bahagian Makan</th>
-                        <th className="border-r border-black text-center w-12 font-bold">Bil. Dituntut</th>
-                        <th className="border-r border-black text-center w-12 font-bold">Bil. Hari</th>
-                        <th className="text-center w-16 font-bold">RM</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Sarapan Pagi</td><td className="border-r border-black text-center">{data.meals.sarapan.bil || ''}</td><td className="border-r border-black text-center">{data.meals.sarapan.hari || ''}</td><td className="text-right px-2">{(data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar).toFixed(2)}</td></tr>
-                      <tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Tengah Hari</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.hari || ''}</td><td className="text-right px-2">{(data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar).toFixed(2)}</td></tr>
-                      <tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Malam</td><td className="border-r border-black text-center">{data.meals.makanMalam.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanMalam.hari || ''}</td><td className="text-right px-2">{(data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar).toFixed(2)}</td></tr>
-                      <tr className="font-bold border-b-[1.5px] border-black bg-white"><td colSpan={3} className="text-right pr-4 py-1 uppercase">Jumlah</td><td className="text-right px-2 py-1">{mealTotal.toFixed(2)}</td></tr>
-                    </tbody>
+                    <thead><tr className="border-b border-black"><th className="border-r border-black text-left px-2 py-1">Bahagian Makan</th><th className="border-r border-black text-center w-12 font-bold">Bil. Dituntut</th><th className="border-r border-black text-center w-12 font-bold">Bil. Hari</th><th className="text-center w-16 font-bold">RM</th></tr></thead>
+                    <tbody><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Sarapan Pagi</td><td className="border-r border-black text-center">{data.meals.sarapan.bil || ''}</td><td className="border-r border-black text-center">{data.meals.sarapan.hari || ''}</td><td className="text-right px-2">{(data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar).toFixed(2)}</td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Tengah Hari</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanTengahHari.hari || ''}</td><td className="text-right px-2">{(data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar).toFixed(2)}</td></tr><tr className="border-b border-black"><td className="border-r border-black px-2 py-1">• Makan Malam</td><td className="border-r border-black text-center">{data.meals.makanMalam.bil || ''}</td><td className="border-r border-black text-center">{data.meals.makanMalam.hari || ''}</td><td className="text-right px-2">{(data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar).toFixed(2)}</td></tr><tr className="font-bold border-b-[1.5px] border-black bg-white"><td colSpan={3} className="text-right pr-4 py-1 uppercase">Jumlah</td><td className="text-right px-2 py-1">{mealTotal.toFixed(2)}</td></tr></tbody>
                   </table>
                   <div className="px-2 py-2 text-[8pt]">Elaun Makan x {data.meals.sarapan.hari || '....'} sebanyak RM {mealTotal > 0 ? (mealTotal / (data.meals.sarapan.hari || 1)).toFixed(2) : '...........'} /hari</div>
                   <div className="flex justify-between px-2 font-bold py-1 border-y border-black uppercase text-[8.5pt]"><span>Jumlah (RM)</span><span>{mealTotal.toFixed(2)}</span></div>
@@ -390,12 +382,9 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* ========================================================== */}
-        {/* MUKA SURAT 4: BAHAGIAN B (IKUT PDF / SCREENSHOT) */}
-        {/* ========================================================== */}
+        {/* MUKA SURAT 4: BAHAGIAN B (HOTEL/LOJING) */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">BAHAGIAN B</div>
-          
           <table className="w-full border-collapse border-none">
             <thead>
               <tr className="text-[8.5pt]">
@@ -404,119 +393,29 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
               </tr>
             </thead>
             <tbody className="text-[8.5pt]">
-              {/* Slot Hotel 1 */}
               <tr className="border-t border-black">
                 <td className="border-r border-black p-3 align-top relative min-h-[100px]">
                   <div className="leading-6">BSH x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{hotels[0]?.bilangan || ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{hotels[0]?.kadar.toFixed(2) || ''}</span>/hari.</div>
                   <div className="text-[7.5pt] mt-1 italic font-medium">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div>
                   <div className="text-[8pt] mt-8">[Resit <span className="font-bold border-b border-black inline-block min-w-[150px]">{hotels[0] ? 'DISERTAKAN' : ''}</span>]</div>
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{hotels[0] ? (hotels[0].bilangan * hotels[0].kadar).toFixed(2) : ''}</div>
-                  </div>
+                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{hotels[0] ? (hotels[0].bilangan * hotels[0].kadar).toFixed(2) : ''}</div></div>
                 </td>
-                <td className="p-3 align-top relative min-h-[100px]">
-                  <div className="leading-6">BSH x ................. sebanyak RM ................./hari.</div>
-                  <div className="text-[7.5pt] mt-1 italic font-medium">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div>
-                  <div className="text-[8pt] mt-8">[Resit .....................................................]</div>
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1"></div>
-                  </div>
-                </td>
+                <td className="p-3 align-top relative min-h-[100px]"><div className="leading-6">BSH x ................. sebanyak RM ................./hari.</div><div className="text-[7.5pt] mt-1 italic font-medium">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div><div className="text-[8pt] mt-8">[Resit .....................................................]</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1"></div></div></td>
               </tr>
-              {/* Slot Hotel 2 */}
-              <tr className="border-t border-black">
-                <td className="border-r border-black p-3 align-top relative min-h-[100px]">
-                  <div className="leading-6">BSH x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{hotels[1]?.bilangan || ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{hotels[1]?.kadar.toFixed(2) || ''}</span>/hari.</div>
-                  <div className="text-[7.5pt] mt-1 italic font-medium">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div>
-                  <div className="text-[8pt] mt-8">[Resit <span className="font-bold border-b border-black inline-block min-w-[150px]">{hotels[1] ? 'DISERTAKAN' : ''}</span>]</div>
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{hotels[1] ? (hotels[1].bilangan * hotels[1].kadar).toFixed(2) : ''}</div>
-                  </div>
-                </td>
-                <td className="p-3 align-top relative min-h-[100px]">
-                  <div className="leading-6">BSH x ................. sebanyak RM ................./hari.</div>
-                  <div className="text-[7.5pt] mt-1 italic font-medium">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</div>
-                  <div className="text-[8pt] mt-8">[Resit .....................................................]</div>
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1"></div>
-                  </div>
-                </td>
-              </tr>
-              {/* Header Lojing */}
               <tr className="border-t border-black font-bold">
                 <td className="border-r border-black py-2 uppercase text-center px-2">TUNTUTAN ELAUN LOJING<br/>(SEMENANJUNG MALAYSIA)</td>
                 <td className="py-2 uppercase text-center px-2">TUNTUTAN ELAUN LOJING<br/>(SABAH/ SARAWAK /WP LABUAN)</td>
               </tr>
-              {/* Pengiraan Lojing */}
               <tr className="border-t border-black">
-                <td className="border-r border-black p-3 align-top relative min-h-[50px]">
-                  <div className="leading-6">Elaun Lojing x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + l.bilangan, 0) : ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{lojingsOnly[0]?.kadar.toFixed(2) || ''}</span>/hari</div>
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + (l.bilangan * l.kadar), 0).toFixed(2) : ''}</div>
-                  </div>
-                </td>
-                <td className="p-3 align-top relative min-h-[50px]">
-                  <div className="leading-6">Elaun Lojing x ................. sebanyak RM ................./hari</div>
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex">
-                    <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
-                    <div className="flex-1"></div>
-                  </div>
-                </td>
+                <td className="border-r border-black p-3 align-top relative min-h-[50px]"><div className="leading-6">Elaun Lojing x <span className="font-bold border-b border-black inline-block min-w-[30px] text-center">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + l.bilangan, 0) : ''}</span> sebanyak RM <span className="font-bold border-b border-black inline-block min-w-[50px] text-center">{lojingsOnly[0]?.kadar.toFixed(2) || ''}</span>/hari</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1 flex items-center justify-end px-2 font-bold text-[9.5pt]">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + (l.bilangan * l.kadar), 0).toFixed(2) : ''}</div></div></td>
+                <td className="p-3 align-top relative min-h-[50px]"><div className="leading-6">Elaun Lojing x ................. sebanyak RM ................./hari</div><div className="absolute right-0 top-0 h-full border-l border-black w-24 flex"><div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div><div className="flex-1"></div></div></td>
               </tr>
-              {/* Alamat Lojing 1 */}
               <tr className="border-t border-black min-h-[140px]">
-                <td className="border-r border-black p-3 align-top">
-                   <div className="font-bold text-[9pt] mb-2 uppercase tracking-tight">Tarikh Lojing: <span className="ml-2 font-black border-b border-black inline-block min-w-[150px]">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : ''}</span></div>
-                   <div className="font-bold text-[9pt] uppercase tracking-tight">Alamat Lojing:</div>
-                   <div className="mt-1 text-[8.5pt] text-justify font-black uppercase leading-5 h-20">{lojingsOnly[0]?.alamat || ''}</div>
-                </td>
-                <td className="p-3 align-top">
-                   <div className="font-bold text-[9pt] mb-2 uppercase tracking-tight">Tarikh Lojing: .........................</div>
-                   <div className="font-bold text-[9pt] uppercase tracking-tight">Alamat Lojing:</div>
-                   <div className="mt-1 h-20"></div>
-                </td>
+                <td className="border-r border-black p-3 align-top"><div className="font-bold text-[9pt] mb-2 uppercase tracking-tight">Tarikh Lojing: <span className="ml-2 font-black border-b border-black inline-block min-w-[150px]">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : ''}</span></div><div className="font-bold text-[9pt] uppercase tracking-tight">Alamat Lojing:</div><div className="mt-1 text-[8.5pt] text-justify font-black uppercase leading-5 h-20">{lojingsOnly[0]?.alamat || ''}</div></td>
+                <td className="p-3 align-top"><div className="font-bold text-[9pt] mb-2 uppercase tracking-tight">Tarikh Lojing: .........................</div><div className="font-bold text-[9pt] uppercase tracking-tight">Alamat Lojing:</div><div className="mt-1 h-20"></div></td>
               </tr>
-              {/* Alamat Lojing 2 */}
-              <tr className="border-t border-black min-h-[140px]">
-                <td className="border-r border-black p-3 align-top">
-                   <div className="font-bold text-[9pt] mb-2 uppercase tracking-tight">Tarikh Lojing: <span className="ml-2 font-black border-b border-black inline-block min-w-[150px]">{lojingsOnly[1]?.tarikh ? formatDate(lojingsOnly[1].tarikh) : ''}</span></div>
-                   <div className="font-bold text-[9pt] uppercase tracking-tight">Alamat Lojing:</div>
-                   <div className="mt-1 text-[8.5pt] text-justify font-black uppercase leading-5 h-20">{lojingsOnly[1]?.alamat || ''}</div>
-                </td>
-                <td className="p-3 align-top">
-                   <div className="font-bold text-[9pt] mb-2 uppercase tracking-tight">Tarikh Lojing: .........................</div>
-                   <div className="font-bold text-[9pt] uppercase tracking-tight">Alamat Lojing:</div>
-                   <div className="mt-1 h-20"></div>
-                </td>
-              </tr>
-              {/* Footer Jumlah RM */}
-              <tr className="border-t-[1.5px] border-black font-black bg-gray-50/30">
-                <td className="border-r border-black p-2 text-right pr-28 relative uppercase text-[10pt]">Jumlah
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex bg-white">
-                    <div className="w-8 border-r border-black flex items-center justify-center">RM</div>
-                    <div className="flex-1 flex items-center justify-end px-2">{partBTotal.toFixed(2)}</div>
-                  </div>
-                </td>
-                <td className="p-2 text-right pr-28 relative uppercase text-[10pt]">Jumlah
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex bg-white">
-                    <div className="w-8 border-r border-black flex items-center justify-center">RM</div>
-                    <div className="flex-1"></div>
-                  </div>
-                </td>
-              </tr>
-              {/* Jumlah Keseluruhan Bahagian B */}
               <tr className="border-t-[1.5px] border-black font-black bg-gray-100">
-                <td colSpan={2} className="text-right p-3 pr-28 relative uppercase text-[10.5pt] tracking-widest">JUMLAH (BAHAGIAN B)
-                  <div className="absolute right-0 top-0 h-full border-l border-black w-24 flex items-center justify-between px-2 bg-white">
-                    <span className="font-bold mr-1">RM</span>
-                    <span className="font-bold">{partBTotal.toFixed(2)}</span>
-                  </div>
-                </td>
+                <td colSpan={2} className="text-right p-3 pr-28 relative uppercase text-[10.5pt] tracking-widest">JUMLAH (BAHAGIAN B)<div className="absolute right-0 top-0 h-full border-l border-black w-24 flex items-center justify-between px-2 bg-white"><span className="font-bold mr-1">RM</span><span className="font-bold">{partBTotal.toFixed(2)}</span></div></td>
               </tr>
             </tbody>
           </table>
@@ -525,74 +424,77 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN */}
-        <div className="border-[1.5px] border-black mt-10">
-          <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
+        {/* ========================================================== */}
+        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN (IKUT SCREENSHOT) */}
+        {/* ========================================================== */}
+        <div className="border-[1.5px] border-black">
+          <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
           <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">BELANJA PELBAGAI</div>
           <table className="w-full border-collapse">
             <tbody className="text-[9.5pt]">
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Telefon, Telegram , Faks [Resit ..........................................................................]</td>
+                <td className="px-4 py-2 leading-tight">Telefon, Telegram , Faks [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.telefon > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black w-8 text-center font-bold">RM</td>
                 <td className="border-l border-black w-32 text-right px-2 font-bold">{data.misc.telefon > 0 ? data.misc.telefon.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Pos [Resit ............................................................................................................]</td>
+                <td className="px-4 py-2 leading-tight">Pos [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.pos > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{data.misc.pos > 0 ? data.misc.pos.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Dobi [Resit ...........................................................................................................]</td>
+                <td className="px-4 py-2 leading-tight">Dobi [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.dobi > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{data.misc.dobi > 0 ? data.misc.dobi.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Cukai Lapangan Terbang [Resit...............................................................................]</td>
+                <td className="px-4 py-2 leading-tight">Cukai Lapangan Terbang [ Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.airportTax > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{data.misc.airportTax > 0 ? data.misc.airportTax.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Lebihan Bagasi [ Resit.............................................................................................]</td>
+                <td className="px-4 py-2 leading-tight">Lebihan Bagasi [ Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.lebihanBagasi > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{data.misc.lebihanBagasi > 0 ? data.misc.lebihanBagasi.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Tempat Letak Kereta [Resit/Penyata <i>Touch&Go</i> /Lain-lain........................................]</td>
+                <td className="px-4 py-2 leading-tight">Tempat Letak Kereta [Resit/Penyata <i>Touch&Go</i> /Lain-lain <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.parking > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{data.misc.parking > 0 ? data.misc.parking.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Tol [Resit/Penyata <i>Touch&Go</i> /RFID/Lain-lain: .......................................................]</td>
+                <td className="px-4 py-2 leading-tight">Tol [Resit/Penyata <i>Touch&Go</i> /RFID/Lain-lain: <span className="font-bold border-b border-black inline-block min-w-[200px]">{(totalTolLogs + data.misc.tol) > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{ (totalTolLogs + data.misc.tol) > 0 ? (totalTolLogs + data.misc.tol).toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 leading-6">Saringan/ Pengesanan/ Vaksin [Resit .......................................................................]</td>
+                <td className="px-4 py-2 leading-tight">Saringan/ Pengesanan/ Vaksin [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.saringan > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{data.misc.saringan > 0 ? data.misc.saringan.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b-[1.5px] border-black">
-                <td className="px-4 py-1.5 leading-6">Kemasukan ke Premis/Kawasan [Resit .......................................................................]</td>
+                <td className="px-4 py-2 leading-tight">Kemasukan ke Premis/Kawasan [Resit <span className="font-bold border-b border-black inline-block min-w-[200px]">{data.misc.kemasukanPremis > 0 ? 'DISERTAKAN' : ''}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
                 <td className="border-l border-black text-right px-2 font-bold">{data.misc.kemasukanPremis > 0 ? data.misc.kemasukanPremis.toFixed(2) : ''}</td>
               </tr>
-              <tr className="font-bold text-[10.5pt] bg-gray-50/30">
+              <tr className="font-bold text-[10.5pt]">
                 <td className="text-right pr-4 py-2 uppercase">JUMLAH (BAHAGIAN C)</td>
                 <td className="border-l border-black text-center">RM</td>
                 <td className="border-l border-black text-right px-2">{miscTotal.toFixed(2)}</td>
               </tr>
-              <tr className="font-black text-[11pt] border-t-[1.5px] border-black bg-gray-100">
+              <tr className="font-black text-[11pt] border-t-[1.5px] border-black bg-gray-50">
                 <td className="text-right pr-4 py-3 uppercase">JUMLAH KESELURUHAN TUNTUTAN (BAHAGIAN A+B+C)</td>
                 <td className="border-l border-black text-center">RM</td>
-                <td className="border-l border-black text-right px-2">{grandTotal.toFixed(2)}</td>
+                <td className="border-l border-black text-right px-2 font-black">{grandTotal.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
         </div>
+        <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi.</div>
 
         <div className="border-[1.5px] border-black p-6 mt-8">
-          <div className="font-bold uppercase text-center text-[11pt] mb-6 tracking-widest">PENGAKUAN</div>
-          <div className="text-[9.5pt] font-medium leading-relaxed space-y-2">
+          <div className="font-bold uppercase text-center text-[11pt] mb-4 tracking-widest">PENGAKUAN</div>
+          <div className="text-[9.5pt] font-medium leading-tight space-y-2">
             <p>Saya mengaku bahawa:</p>
             <div className="flex gap-4">
               <span className="w-6 font-bold">(a)</span>
@@ -604,11 +506,11 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             </div>
             <div className="flex gap-4">
               <span className="w-6 font-bold">(c)</span>
-              <p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit berjumlah sebanyak RM........................................ telah sebenarnya dilakukan dan dibayar oleh saya;</p>
+              <p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit berjumlah sebanyak RM.................................................. telah sebenarnya dilakukan dan dibayar oleh saya;</p>
             </div>
             <div className="flex gap-4">
               <span className="w-6 font-bold">(d)</span>
-              <p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit bukan atas nama saya berjumlah sebanyak RM........................................ telah sebenarnya dilakukan dan dibayar bagi pihak saya atas urusan rasmi dan tuntutan adalah berdasarkan kelayakan saya;</p>
+              <p className="flex-1 text-justify">perbelanjaan yang tidak disokong dengan resit bukan atas nama saya berjumlah sebanyak RM…........................... telah sebenarnya dilakukan dan dibayar bagi pihak saya atas urusan rasmi dan tuntutan adalah berdasarkan kelayakan saya;</p>
             </div>
             <div className="flex gap-4">
               <span className="w-6 font-bold">(e)</span>
@@ -620,16 +522,21 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             </div>
           </div>
           
-          <div className="flex justify-between mt-20">
+          <div className="flex justify-between mt-16">
              <div className="w-1/2 flex items-end pb-4 font-bold text-[10pt]">
-                Tarikh: .....................................................
+                Tarikh: ...........................................
              </div>
              <div className="w-1/2 text-center">
-                <div className="h-14 border-b border-black w-64 mx-auto border-dotted flex items-end justify-center"></div>
+                <div className="h-10 border-b border-black w-64 mx-auto border-dotted flex items-end justify-center"></div>
                 <div className="pt-2 font-bold uppercase text-[10pt]">(Tandatangan Pemohon)</div>
-                <div className="text-[9.5pt] font-bold mt-2 uppercase text-blue-800">{data.info.nama || '____________________'}</div>
+                <div className="text-[9pt] font-black mt-1 uppercase text-blue-900">{data.info.nama || '____________________'}</div>
              </div>
           </div>
+        </div>
+
+        <div className="mt-8 flex justify-between px-4 text-gray-400 italic text-[7pt]">
+           <div>Sistem e-Tuntutan WP1.4 Digital</div>
+           <div>Dicetak pada: {new Date().toLocaleString('ms-MY')}</div>
         </div>
       </div>
     </div>
