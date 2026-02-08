@@ -459,8 +459,6 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             </div>
           </div>
         </div>
-        <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi.</div>
-
         <div className="page-break"></div>
 
         {/* MUKA SURAT 4: BAHAGIAN B */}
@@ -538,7 +536,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN (MENGIKUT SCREENSHOT) */}
+        {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
           <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">BELANJA PELBAGAI</div>
@@ -604,7 +602,6 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
         </div>
         <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi.</div>
 
-        {/* SEKSYEN PENGAKUAN MENGIKUT SCREENSHOT LENGKAP */}
         <div className="border-[1.5px] border-black p-6 mt-6">
           <div className="font-bold uppercase text-center text-[11pt] mb-4 tracking-widest underline underline-offset-4">PENGAKUAN</div>
           <div className="text-[9pt] space-y-2 leading-tight">
@@ -646,56 +643,43 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI */}
+        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI (MENGIKUT SCREENSHOT TERKINI) */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">PENGESAHAN</div>
           <div className="p-4 text-[10pt] text-justify leading-relaxed border-b-[1.5px] border-black">
             Berdasarkan pengakuan yang dinyatakan oleh pegawai yang memohon, disahkan bahawa perjalanan tersebut telah dilaksanakan atas urusan rasmi dan kelayakan tuntutan pegawai mematuhi peraturan kewangan yang berkuat kuasa.
           </div>
+          <div className="flex border-b-[1.5px] border-black">
+            <div className="w-[60%] border-r border-black p-4">
+              <div className="mt-2 font-bold text-[10pt]">Tarikh: ...........................................</div>
+            </div>
+            <div className="w-[40%] p-4 text-center flex flex-col items-center">
+              <div className="mt-12 w-full border-b border-black border-dotted"></div>
+              <div className="text-[9pt] font-bold mt-1">(Tandatangan)</div>
+              
+              <div className="mt-8 w-full border-b border-black border-dotted"></div>
+              <div className="text-[9pt] font-bold mt-1">(Nama)</div>
+              
+              <div className="mt-8 w-full border-b border-black border-dotted"></div>
+              <div className="text-[9pt] font-bold mt-1">(Jawatan)</div>
+              <div className="text-[8.5pt] font-bold mt-2 leading-tight">b.p. Ketua Setiausaha/ Pegawai Pengawal</div>
+            </div>
+          </div>
+
+          <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white tracking-[0.05em]">PENDAHULUAN DIRI (JIKA ADA)</div>
           <table className="w-full border-collapse border-none">
             <tbody className="text-[10pt]">
-              <tr className="min-h-[100px]">
-                <td className="w-3/5 p-4 border-r border-black align-top"><div className="mt-2 font-bold">Tarikh: ...........................................</div></td>
-                <td className="w-2/5 p-4 align-top text-center">
-                   <div className="mt-12 border-b border-black border-dotted w-48 mx-auto"></div>
-                   <div className="text-[9pt] font-bold mt-1">(Tandatangan)</div>
-                </td>
-              </tr>
-              <tr className="min-h-[60px] border-t border-black">
-                <td className="w-3/5 border-r border-black"></td>
-                <td className="w-2/5 p-4 text-center">
-                   <div className="mt-2 border-b border-black border-dotted w-48 mx-auto"></div>
-                   <div className="text-[9pt] font-bold mt-1">(Nama)</div>
-                </td>
-              </tr>
-              <tr className="min-h-[60px] border-t border-black">
-                <td className="w-3/5 border-r border-black"></td>
-                <td className="w-2/5 p-4 text-center">
-                   <div className="mt-2 border-b border-black border-dotted w-48 mx-auto"></div>
-                   <div className="text-[9pt] font-bold mt-1">(Jawatan)</div>
-                   <div className="text-[8pt] font-bold mt-2 italic leading-tight">b.p. Ketua Setiausaha/ Pegawai Pengawal</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div className="bg-gray-50 text-center font-bold py-2 uppercase text-[11pt] border-y-[1.5px] border-black tracking-widest">PENDAHULUAN DIRI (JIKA ADA)</div>
-          <table className="w-full border-collapse border-none">
-            <tbody className="text-[10.5pt]">
               <tr className="border-b border-black">
-                <td className="px-4 py-3">Pendahuluan Diri diberi</td>
-                <td className="w-8 text-center border-l border-black font-bold">RM</td>
-                <td className="w-40 text-right px-4 font-bold">{(Number(data.advance)||0).toFixed(2)}</td>
+                <td className="px-4 py-2.5">Pendahuluan Diri diberi</td>
+                <td className="w-20 text-center border-l border-black font-bold">RM</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-3">Tolak: Tuntutan sekarang</td>
-                <td className="w-8 text-center border-l border-black font-bold">RM</td>
-                <td className="w-40 text-right px-4 font-bold">{grandTotal.toFixed(2)}</td>
+                <td className="px-4 py-2.5">Tolak: Tuntutan sekarang</td>
+                <td className="w-20 text-center border-l border-black font-bold">RM</td>
               </tr>
-              <tr className="font-black bg-gray-100">
-                <td className="px-4 py-4 uppercase tracking-wider">{nettTotal >= 0 ? 'Baki dituntut' : 'Baki dibayar balik'}</td>
-                <td className="w-8 text-center border-l border-black font-bold">RM</td>
-                <td className="w-40 text-right px-4 font-black text-[12pt]">{Math.abs(nettTotal).toFixed(2)}</td>
+              <tr className="">
+                <td className="px-4 py-2.5">Baki dituntut/Baki dibayar balik</td>
+                <td className="w-20 text-center border-l border-black font-bold">RM</td>
               </tr>
             </tbody>
           </table>
