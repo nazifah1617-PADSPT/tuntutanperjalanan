@@ -23,6 +23,7 @@ export interface JourneyLog {
   waktuSampai: string;
   butiran: string;
   jarak: number;
+  tol: number; // Tambahan medan tol
 }
 
 export interface PublicTransport {
