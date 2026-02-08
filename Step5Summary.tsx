@@ -238,7 +238,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                     <div className="text-[8pt] mb-1 italic">Dari {j.pergi.dari} ke {j.pergi.ke}</div>
                     {(Number(j.pergi.tol) > 0) && (
                       <div className="text-[7.5pt] text-blue-700 mt-2">
-                        <span className="font-bold uppercase">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'} (RM {(Number(j.pergi.tol)||0).toFixed(2)})
+                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'} (RM {(Number(j.pergi.tol)||0).toFixed(2)})
                       </div>
                     )}
                   </td>
@@ -249,10 +249,10 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                     <td className="text-center py-4 border-l-0">{formatTime(j.balik.waktuBertolak)}</td>
                     <td className="text-center py-4">{formatTime(j.balik.waktuSampai)}</td>
                     <td className="px-3 py-4 leading-normal">
-                      <div className="text-[8pt] italic">Dari {j.balik.dari} ke {j.balik.ke}</div>
+                      <div className="text-[8pt] mb-1 italic">Dari {j.balik.dari} ke {j.balik.ke}</div>
                       {(Number(j.balik.tol) > 0) && (
                         <div className="text-[7.5pt] text-amber-700 mt-2">
-                          <span className="font-bold uppercase">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'} (RM {(Number(j.balik.tol)||0).toFixed(2)})
+                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'} (RM {(Number(j.balik.tol)||0).toFixed(2)})
                         </div>
                       )}
                     </td>
@@ -328,7 +328,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 4: BAHAGIAN B (SUSUNAN KEMAS) */}
+        {/* MUKA SURAT 4: BAHAGIAN B (SUSUNAN KEMAS MENGIKUT SCREENSHOT) */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">BAHAGIAN B</div>
           
@@ -337,14 +337,14 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             <div className="w-1/2 py-2 px-2 flex items-center justify-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SABAH/ SARAWAK /WP LABUAN)</div>
           </div>
 
-          <div className="flex border-b border-black min-h-[90px]">
+          <div className="flex border-b border-black min-h-[100px]">
             <div className="w-1/2 border-r border-black p-2 flex">
               <div className="flex-1 text-[8.5pt] leading-relaxed">
                 BSH x <span className="font-bold border-b border-black px-1">{hotels[0]?.bilangan || '____'}</span> sebanyak RM <span className="font-bold border-b border-black px-1">{(Number(hotels[0]?.kadar)||0).toFixed(2)}</span> /hari.<br/>
                 <span className="text-[7.5pt] italic">(Termasuk Bayaran Perkhidmatan & Cukai Perkhidmatan)</span><br/><br/>
                 [Resit <span className="font-bold border-b border-black px-1">{hotels[0] ? 'DISERTAKAN' : '________________'}</span>]
               </div>
-              <div className="w-24 border-l border-black flex items-center justify-center">
+              <div className="w-24 border-l border-black flex items-center justify-center h-full">
                  <div className="w-full flex h-full">
                     <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
                     <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9pt]">{hotels[0] ? ((Number(hotels[0].bilangan)||0) * (Number(hotels[0].kadar)||0)).toFixed(2) : '0.00'}</div>
@@ -352,8 +352,8 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
               </div>
             </div>
             <div className="w-1/2 p-2 flex">
-              <div className="flex-1 text-[8.5pt]">BSH x ______ sebanyak RM ______ /hari.<br/>[Resit ________________]</div>
-              <div className="w-24 border-l border-black flex">
+              <div className="flex-1 text-[8.5pt]">BSH x ______ sebanyak RM ______ /hari.<br/><br/>[Resit ________________]</div>
+              <div className="w-24 border-l border-black flex items-center justify-center h-full">
                  <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
                  <div className="flex-1"></div>
               </div>
@@ -365,12 +365,12 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             <div className="w-1/2 py-2 uppercase">TUNTUTAN ELAUN LOJING (SABAH/SARAWAK)</div>
           </div>
 
-          <div className="flex border-b border-black min-h-[50px]">
+          <div className="flex border-b border-black min-h-[60px]">
             <div className="w-1/2 border-r border-black p-2 flex">
-              <div className="flex-1 text-[8.5pt]">
+              <div className="flex-1 text-[8.5pt] py-2">
                 Elaun Lojing x <span className="font-bold border-b border-black px-1">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + (Number(l.bilangan)||0), 0) : '____'}</span> sebanyak RM <span className="font-bold border-b border-black px-1">{(Number(lojingsOnly[0]?.kadar)||0).toFixed(2)}</span> /hari
               </div>
-              <div className="w-24 border-l border-black flex items-center justify-center">
+              <div className="w-24 border-l border-black flex items-center justify-center h-full">
                  <div className="w-full flex h-full">
                     <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
                     <div className="flex-1 flex items-center justify-end px-2 font-bold text-[9pt]">{lojingsOnly.length > 0 ? lojingsOnly.reduce((sum, l) => sum + ((Number(l.bilangan)||0) * (Number(l.kadar)||0)), 0).toFixed(2) : '0.00'}</div>
@@ -378,65 +378,95 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
               </div>
             </div>
             <div className="w-1/2 p-2 flex">
-              <div className="flex-1 text-[8.5pt]">Elaun Lojing x ______ sebanyak RM ______ /hari</div>
-              <div className="w-24 border-l border-black flex">
+              <div className="flex-1 text-[8.5pt] py-2">Elaun Lojing x ______ sebanyak RM ______ /hari</div>
+              <div className="w-24 border-l border-black flex items-center justify-center h-full">
                  <div className="w-8 border-r border-black flex items-center justify-center font-bold text-[9pt]">RM</div>
                  <div className="flex-1"></div>
               </div>
             </div>
           </div>
 
-          <div className="flex border-b border-black min-h-[80px] text-[8.5pt]">
+          <div className="flex border-b border-black min-h-[90px] text-[8.5pt]">
             <div className="w-1/2 border-r border-black p-2">
-              <div className="font-bold">TARIKH LOJING: <span className="font-black border-b border-black">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : '________________'}</span></div>
-              <div className="font-bold mt-1">ALAMAT LOJING:</div>
-              <div className="mt-1 uppercase font-black">{lojingsOnly[0]?.alamat || ''}</div>
+              <div className="font-bold">TARIKH LOJING: <span className="font-black border-b border-black px-1">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : '________________'}</span></div>
+              <div className="font-bold mt-2 uppercase tracking-tight">ALAMAT LOJING:</div>
+              <div className="mt-1 uppercase font-black text-[8pt] leading-tight">{lojingsOnly[0]?.alamat || ''}</div>
             </div>
-            <div className="w-1/2 p-2"><div className="font-bold">TARIKH LOJING: ________________</div><div className="font-bold mt-1">ALAMAT LOJING:</div></div>
+            <div className="w-1/2 p-2">
+              <div className="font-bold">TARIKH LOJING: ________________</div>
+              <div className="font-bold mt-2 uppercase tracking-tight">ALAMAT LOJING:</div>
+            </div>
           </div>
 
-          <div className="flex font-black uppercase text-[10.5pt] bg-gray-50">
-            <div className="flex-1 py-3 text-right pr-4">JUMLAH (BAHAGIAN B)</div>
+          <div className="flex font-black uppercase text-[10pt] bg-gray-50">
+            <div className="flex-1 py-3 text-right pr-6 tracking-widest">JUMLAH (BAHAGIAN B)</div>
             <div className="w-24 border-l border-black flex">
                <div className="w-8 border-r border-black flex items-center justify-center font-bold">RM</div>
                <div className="flex-1 flex items-center justify-end px-2">{partBTotal.toFixed(2)}</div>
             </div>
           </div>
         </div>
+        <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi</div>
 
         <div className="page-break"></div>
 
         {/* MUKA SURAT 5: BAHAGIAN C & PENGAKUAN */}
         <div className="border-[1.5px] border-black">
-          <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C: BELANJA PELBAGAI</div>
+          <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN C</div>
+          <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">BELANJA PELBAGAI</div>
           <table className="w-full border-collapse">
             <tbody className="text-[9.5pt]">
               <tr className="border-b border-black">
                 <td className="px-4 py-2">Telefon, Telegram, Faks [Resit {getMiscVal('telefon') > 0 ? 'DISERTAKAN' : '_____'}]</td>
                 <td className="border-l border-black w-8 text-center font-bold">RM</td>
-                <td className="border-l border-black w-32 text-right px-2 font-bold">{getMiscVal('telefon') > 0 ? getMiscVal('telefon').toFixed(2) : '0.00'}</td>
+                <td className="border-l border-black w-32 text-right px-2 font-bold">{getMiscVal('telefon') > 0 ? getMiscVal('telefon').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
                 <td className="px-4 py-2">Pos [Resit {getMiscVal('pos') > 0 ? 'DISERTAKAN' : '_____'}]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('pos') > 0 ? getMiscVal('pos').toFixed(2) : '0.00'}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('pos') > 0 ? getMiscVal('pos').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
                 <td className="px-4 py-2">Dobi [Resit {getMiscVal('dobi') > 0 ? 'DISERTAKAN' : '_____'}]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('dobi') > 0 ? getMiscVal('dobi').toFixed(2) : '0.00'}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('dobi') > 0 ? getMiscVal('dobi').toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2">Tempat Letak Kereta / Tol [Resit {(getMiscVal('parking') + getMiscVal('tol') + totalTolLogs) > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="px-4 py-2">Airport Tax [Resit {getMiscVal('airportTax') > 0 ? 'DISERTAKAN' : '_____'}]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{(getMiscVal('parking') + getMiscVal('tol') + totalTolLogs).toFixed(2)}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('airportTax') > 0 ? getMiscVal('airportTax').toFixed(2) : ''}</td>
               </tr>
-              <tr className="font-bold text-[10.5pt] border-t-[1.5px] border-black">
+              <tr className="border-b border-black">
+                <td className="px-4 py-2">Lebihan Bagasi [Resit {getMiscVal('lebihanBagasi') > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('lebihanBagasi') > 0 ? getMiscVal('lebihanBagasi').toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-2">Parking [Resit {getMiscVal('parking') > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('parking') > 0 ? getMiscVal('parking').toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-2">Tol [Resit {(getMiscVal('tol') + totalTolLogs) > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{(getMiscVal('tol') + totalTolLogs) > 0 ? (getMiscVal('tol') + totalTolLogs).toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-2">Saringan/Vaksin [Resit {getMiscVal('saringan') > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('saringan') > 0 ? getMiscVal('saringan').toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-2">Kemasukan Premis [Resit {getMiscVal('kemasukanPremis') > 0 ? 'DISERTAKAN' : '_____'}]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{getMiscVal('kemasukanPremis') > 0 ? getMiscVal('kemasukanPremis').toFixed(2) : ''}</td>
+              </tr>
+              <tr className="font-bold text-[10.5pt] border-t border-black">
                 <td className="text-right pr-4 py-2 uppercase">JUMLAH (BAHAGIAN C)</td>
                 <td className="border-l border-black text-center">RM</td>
                 <td className="border-l border-black text-right px-2">{miscTotal.toFixed(2)}</td>
               </tr>
-              <tr className="font-black text-[11pt] border-t-[1.5px] border-black bg-gray-100">
+              <tr className="font-black text-[11pt] border-t-[1.5px] border-black bg-gray-50">
                 <td className="text-right pr-4 py-3 uppercase">JUMLAH KESELURUHAN (BAHAGIAN A+B+C)</td>
                 <td className="border-l border-black text-center">RM</td>
                 <td className="border-l border-black text-right px-2 font-black">{grandTotal.toFixed(2)}</td>
@@ -445,24 +475,28 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           </table>
         </div>
 
-        <div className="border-[1.5px] border-black p-6 mt-8">
-          <div className="font-bold uppercase text-center text-[11pt] mb-4 tracking-widest">PENGAKUAN</div>
-          <div className="text-[9.5pt] space-y-2">
-            <p>Saya mengaku bahawa perjalanan pada tarikh-tarikh tersebut adalah benar dan telah dibuat atas urusan rasmi, dan tuntutan ini dibuat mengikut kadar WP1.4 yang berkuat kuasa.</p>
+        <div className="border-[1.5px] border-black p-6 mt-6">
+          <div className="font-bold uppercase text-center text-[11pt] mb-4 tracking-widest underline underline-offset-4">PENGAKUAN</div>
+          <div className="text-[9.5pt] space-y-2 leading-relaxed">
+            <p>Saya mengaku bahawa:</p>
+            <div className="flex gap-4"><span className="w-6 font-bold">(a)</span><p className="flex-1">perjalanan pada tarikh-tarikh tersebut adalah benar dan telah dibuat atas urusan rasmi;</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(b)</span><p className="flex-1">tuntutan ini dibuat mengikut kadar dan syarat seperti yang dinyatakan di bawah peraturan bertugas rasmi yang berkuat kuasa;</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(c)</span><p className="flex-1">perbelanjaan yang tidak disokong dengan resit berjumlah RM ................. telah sebenarnya dilakukan dan dibayar oleh saya;</p></div>
+            <div className="flex gap-4"><span className="w-6 font-bold">(d)</span><p className="flex-1">semua butiran yang dinyatakan di atas adalah tepat dan benar.</p></div>
           </div>
           <div className="flex justify-between mt-12">
              <div className="w-1/2 flex items-end font-bold">Tarikh: {new Date().toLocaleDateString('ms-MY')}</div>
              <div className="w-1/2 text-center">
                 <div className="h-10 border-b border-black w-64 mx-auto border-dotted"></div>
                 <div className="pt-2 font-bold uppercase text-[9pt]">(Tandatangan Pemohon)</div>
-                <div className="font-black uppercase text-blue-900">{data.info.nama}</div>
+                <div className="font-black uppercase text-blue-900 text-[9pt]">{data.info.nama}</div>
              </div>
           </div>
         </div>
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI (MENGIKUT PDF ASAL) */}
+        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">PENGESAHAN</div>
           <div className="p-4 text-[10pt] text-justify leading-relaxed border-b-[1.5px] border-black">
@@ -470,24 +504,24 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           </div>
           <table className="w-full border-collapse border-none">
             <tbody className="text-[10pt]">
-              <tr className="min-h-[80px]">
+              <tr className="min-h-[100px]">
                 <td className="w-3/5 p-4 border-r border-black align-top"><div className="mt-2 font-bold">Tarikh: ...........................................</div></td>
-                <td className="w-2/5 p-4 align-top text-center relative">
-                   <div className="mt-8 border-b border-black border-dotted w-48 mx-auto"></div>
+                <td className="w-2/5 p-4 align-top text-center">
+                   <div className="mt-12 border-b border-black border-dotted w-48 mx-auto"></div>
                    <div className="text-[9pt] font-bold mt-1">(Tandatangan)</div>
                 </td>
               </tr>
-              <tr className="min-h-[80px] border-t border-black">
+              <tr className="min-h-[60px] border-t border-black">
                 <td className="w-3/5 border-r border-black"></td>
-                <td className="w-2/5 p-4 align-top text-center">
-                   <div className="mt-4 border-b border-black border-dotted w-48 mx-auto"></div>
+                <td className="w-2/5 p-4 text-center">
+                   <div className="mt-2 border-b border-black border-dotted w-48 mx-auto"></div>
                    <div className="text-[9pt] font-bold mt-1">(Nama)</div>
                 </td>
               </tr>
-              <tr className="min-h-[80px] border-t border-black">
+              <tr className="min-h-[60px] border-t border-black">
                 <td className="w-3/5 border-r border-black"></td>
-                <td className="w-2/5 p-4 align-top text-center">
-                   <div className="mt-4 border-b border-black border-dotted w-48 mx-auto"></div>
+                <td className="w-2/5 p-4 text-center">
+                   <div className="mt-2 border-b border-black border-dotted w-48 mx-auto"></div>
                    <div className="text-[9pt] font-bold mt-1">(Jawatan)</div>
                    <div className="text-[8pt] font-bold mt-2 italic leading-tight">b.p. Ketua Setiausaha/ Pegawai Pengawal</div>
                 </td>
@@ -499,25 +533,25 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
           <table className="w-full border-collapse border-none">
             <tbody className="text-[10.5pt]">
               <tr className="border-b border-black">
-                <td className="px-4 py-2.5">Pendahuluan Diri diberi</td>
+                <td className="px-4 py-3">Pendahuluan Diri diberi</td>
                 <td className="w-8 text-center border-l border-black font-bold">RM</td>
-                <td className="w-32 text-right px-2 font-bold">{(Number(data.advance)||0).toFixed(2)}</td>
+                <td className="w-40 text-right px-4 font-bold">{(Number(data.advance)||0).toFixed(2)}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-2.5">Tolak: Tuntutan sekarang</td>
+                <td className="px-4 py-3">Tolak: Tuntutan sekarang</td>
                 <td className="w-8 text-center border-l border-black font-bold">RM</td>
-                <td className="w-32 text-right px-2 font-bold">{grandTotal.toFixed(2)}</td>
+                <td className="w-40 text-right px-4 font-bold">{grandTotal.toFixed(2)}</td>
               </tr>
               <tr className="font-black bg-gray-100">
-                <td className="px-4 py-3">{nettTotal >= 0 ? 'Baki dituntut' : 'Baki dibayar balik'}</td>
+                <td className="px-4 py-4 uppercase tracking-wider">{nettTotal >= 0 ? 'Baki dituntut' : 'Baki dibayar balik'}</td>
                 <td className="w-8 text-center border-l border-black font-bold">RM</td>
-                <td className="w-32 text-right px-2 font-black">{Math.abs(nettTotal).toFixed(2)}</td>
+                <td className="w-40 text-right px-4 font-black text-[12pt]">{Math.abs(nettTotal).toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div className="mt-8 text-center text-[7pt] text-gray-400 italic">© e-Tuntutan WP1.4 Digital</div>
+        <div className="mt-8 text-center text-[7pt] text-gray-400 italic">Sistem e-Tuntutan WP1.4 Digital | Dicetak pada: {new Date().toLocaleString('ms-MY')}</div>
       </div>
     </div>
   );
