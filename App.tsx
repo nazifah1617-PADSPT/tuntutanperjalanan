@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { ClaimState, JourneyLog, HotelLodging } from './types';
+import { ClaimState, JourneyGroup, HotelLodging } from './types';
 import { KADAR_KERETA, KADAR_MOTOSIKAL, KADAR_MAKAN } from './constants';
 import Step1OfficerInfo from './Step1OfficerInfo';
 import Step2JourneyLog from './Step2JourneyLog';
@@ -43,7 +42,7 @@ export default function App() {
     setFormData(prev => ({ ...prev, info: { ...prev.info, ...info } }));
   };
 
-  const updateLogs = (logs: JourneyLog[]) => {
+  const updateLogs = (logs: JourneyGroup[]) => {
     setFormData(prev => ({ ...prev, logs }));
   };
 

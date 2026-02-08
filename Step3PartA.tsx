@@ -1,10 +1,9 @@
-
 import React, { useMemo } from 'react';
-import { JourneyLog, PublicTransport, MealAllowance } from './types';
+import { JourneyGroup, PublicTransport, MealAllowance } from './types';
 import { KADAR_KERETA, KADAR_MOTOSIKAL } from './constants';
 
 interface Props {
-  logs: JourneyLog[];
+  logs: JourneyGroup[];
   vehicleType: 'Kereta' | 'Motosikal';
   transport: PublicTransport;
   meals: MealAllowance;
@@ -13,7 +12,13 @@ interface Props {
 }
 
 const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTransportChange, onMealsChange }) => {
-  const totalKm = logs.reduce((sum, l) => sum + l.jarak, 0);
+  // Kira total KM dari semua kad (Pergi + Balik)
+  const totalKm = logs.reduce((sum, j) => {
+    const kmPergi = j.pergi.jarak || 0;
+    const kmBalik = j.adaBalik ? (j.balik.jarak || 0) : 0;
+    return sum + kmPergi + kmBalik;
+  }, 0);
+
   const kadar = vehicleType === 'Kereta' ? KADAR_KERETA : KADAR_MOTOSIKAL;
 
   const mileageCalc = useMemo(() => {
@@ -57,12 +62,12 @@ const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTr
             <tbody className="bg-white divide-y divide-gray-200">
               <tr>
                 <td className="px-4 py-3 text-sm">500 km pertama</td>
-                <td className="px-4 py-3 text-center text-sm">{mileageCalc.km1}</td>
+                <td className="px-4 py-3 text-center text-sm">{mileageCalc.km1.toFixed(2)}</td>
                 <td className="px-4 py-3 text-right text-sm font-bold">RM {mileageCalc.amt1.toFixed(2)}</td>
               </tr>
               <tr>
                 <td className="px-4 py-3 text-sm">501 km seterusnya</td>
-                <td className="px-4 py-3 text-center text-sm">{mileageCalc.km2}</td>
+                <td className="px-4 py-3 text-center text-sm">{mileageCalc.km2.toFixed(2)}</td>
                 <td className="px-4 py-3 text-right text-sm font-bold">RM {mileageCalc.amt2.toFixed(2)}</td>
               </tr>
               <tr className="bg-blue-50">
