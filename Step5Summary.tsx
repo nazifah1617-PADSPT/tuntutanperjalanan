@@ -35,7 +35,14 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
   };
 
-  // Calculations
+  // Susun logs mengikut tarikh (Awal ke Akhir) untuk kegunaan Cetakan/PDF
+  const sortedLogs = [...data.logs].sort((a, b) => {
+    if (!a.tarikh) return 1;
+    if (!b.tarikh) return -1;
+    return a.tarikh.localeCompare(b.tarikh);
+  });
+
+  // Calculations (Gunakan data asal atau sorted adalah sama untuk jumlah)
   const totalKm = data.logs.reduce((sum, j) => sum + (Number(j.pergi.jarak) || 0) + (j.adaBalik ? (Number(j.balik.jarak) || 0) : 0), 0);
   const totalTolLogs = data.logs.reduce((sum, j) => sum + (Number(j.pergi.tol) || 0) + (j.adaBalik ? (Number(j.balik.tol) || 0) : 0), 0);
   
@@ -77,8 +84,9 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   const hotels = data.lodgings.filter(l => l.jenis === 'Hotel');
   const lojingsOnly = data.lodgings.filter(l => l.jenis === 'Lojing');
 
-  const bulanTuntutan = data.logs[0]?.tarikh 
-    ? new Date(data.logs[0].tarikh).toLocaleString('ms-MY', { month: 'long', year: 'numeric' }).toUpperCase() 
+  // Ambil bulan dari log pertama yang telah disusun
+  const bulanTuntutan = sortedLogs[0]?.tarikh 
+    ? new Date(sortedLogs[0].tarikh).toLocaleString('ms-MY', { month: 'long', year: 'numeric' }).toUpperCase() 
     : 'JANUARI 2025';
 
   return (
@@ -211,7 +219,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 2: LOG PERJALANAN */}
+        {/* MUKA SURAT 2: LOG PERJALANAN (SUSUNAN KRONOLOGI) */}
         <div className="title-box">KENYATAAN TUNTUTAN</div>
         <table>
           <thead>
@@ -227,7 +235,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             </tr>
           </thead>
           <tbody className="text-[9pt]">
-            {data.logs.map((j, i) => (
+            {sortedLogs.map((j, i) => (
               <React.Fragment key={i}>
                 <tr>
                   <td className="text-center align-middle p-2 font-bold" rowSpan={j.adaBalik ? 2 : 1}>{formatDate(j.tarikh)}</td>
@@ -459,15 +467,19 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             </div>
           </div>
         </div>
+        <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi.</div>
+
         <div className="page-break"></div>
 
         {/* MUKA SURAT 4: BAHAGIAN B */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">BAHAGIAN B</div>
+          
           <div className="flex border-b border-black text-[8pt] font-bold text-center">
             <div className="w-1/2 border-r border-black py-2 px-2 flex items-center justify-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SEMENANJUNG MALAYSIA)</div>
             <div className="w-1/2 py-2 px-2 flex items-center justify-center">TUNTUTAN BAYARAN SEWA HOTEL (BSH)<br/>(SABAH/ SARAWAK /WP LABUAN)</div>
           </div>
+
           <div className="flex border-b border-black min-h-[100px]">
             <div className="w-1/2 border-r border-black p-2 flex">
               <div className="flex-1 text-[8.5pt] leading-relaxed">
@@ -490,10 +502,12 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
               </div>
             </div>
           </div>
+
           <div className="flex border-b border-black text-[8pt] font-bold text-center">
             <div className="w-1/2 border-r border-black py-2 uppercase">TUNTUTAN ELAUN LOJING (SEMENANJUNG)</div>
             <div className="w-1/2 py-2 uppercase">TUNTUTAN ELAUN LOJING (SABAH/SARAWAK)</div>
           </div>
+
           <div className="flex border-b border-black min-h-[60px]">
             <div className="w-1/2 border-r border-black p-2 flex">
               <div className="flex-1 text-[8.5pt] py-2">
@@ -514,6 +528,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
               </div>
             </div>
           </div>
+
           <div className="flex border-b border-black min-h-[90px] text-[8.5pt]">
             <div className="w-1/2 border-r border-black p-2">
               <div className="font-bold">TARIKH LOJING: <span className="font-black border-b border-black px-1">{lojingsOnly[0]?.tarikh ? formatDate(lojingsOnly[0].tarikh) : '________________'}</span></div>
@@ -525,6 +540,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
               <div className="font-bold mt-2 uppercase tracking-tight">ALAMAT LOJING:</div>
             </div>
           </div>
+
           <div className="flex font-black uppercase text-[10pt] bg-gray-50">
             <div className="flex-1 py-3 text-right pr-6 tracking-widest">JUMLAH (BAHAGIAN B)</div>
             <div className="w-24 border-l border-black flex">
@@ -643,7 +659,7 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI (MENGIKUT SCREENSHOT TERKINI) */}
+        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN DIRI */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">PENGESAHAN</div>
           <div className="p-4 text-[10pt] text-justify leading-relaxed border-b-[1.5px] border-black">
