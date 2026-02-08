@@ -438,32 +438,83 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 6: PENGESAHAN & PENDAHULUAN */}
-        <div className="title-box">PENGESAHAN</div>
-        <div className="border border-black p-4">
-           <p className="text-[9pt]">Berdasarkan pengakuan yang dibuat oleh pemohon, disahkan bahawa perjalanan tersebut telah dilaksanakan atas urusan rasmi dan kelayakan tuntutan pegawai mematuhi peraturan kewangan yang berkuat kuasa.</p>
-           <div className="flex justify-between mt-12">
-             <div className="w-1/2">Tarikh: _______________</div>
-             <div className="w-1/2 text-center">
-                <div className="h-10"></div>
-                <div className="border-t border-black w-64 mx-auto pt-1 font-bold">(Tandatangan)</div>
-                <div className="text-[9pt] font-bold">________________________________</div>
-                <div className="text-[8pt]">(Nama & Jawatan)</div>
-                <div className="text-[8pt]">b.p. Ketua Setiausaha/ Pegawai Pengawal</div>
-             </div>
-          </div>
-        </div>
-
-        <div className="title-box mt-8">PENDAHULUAN DIRI (JIKA ADA)</div>
-        <table>
-           <tbody className="text-[10pt]">
-              <tr><td className="w-2/3">Pendahuluan Diri diberi</td><td>RM __________________</td></tr>
-              <tr><td>Tolak: Tuntutan sekarang</td><td>RM {grandTotal.toFixed(2)}</td></tr>
-              <tr className="font-bold bg-gray-50"><td>Baki dituntut/Baki dibayar balik</td><td>RM {nettTotal.toFixed(2)}</td></tr>
-           </tbody>
+        {/* MUKA SURAT 6: PENGESAHAN (IKUT SCREENSHOT) */}
+        <table className="w-full">
+          <thead>
+            <tr>
+              <th colSpan={2} className="text-center py-2 uppercase font-bold tracking-widest text-[11pt]">PENGESAHAN</th>
+            </tr>
+          </thead>
+          <tbody className="text-[10pt]">
+            <tr>
+              <td colSpan={2} className="p-4 leading-relaxed">
+                Berdasarkan pengakuan yang dinyatakan oleh pegawai yang memohon, adalah disahkan bahawa perjalanan tersebut telah dilaksanakan atas urusan rasmi dan kelayakan tuntutan pegawai adalah tertakluk mematuhi peraturan kewangan yang berkuat kuasa.
+              </td>
+            </tr>
+            <tr>
+              <td className="w-1/2 p-4 align-top">
+                Tarikh: .......................................................
+              </td>
+              <td className="w-1/2 p-4 text-center">
+                <div className="h-12 flex items-end justify-center">
+                  .......................................................
+                </div>
+                <div className="text-[9pt] font-medium">(Tandatangan)</div>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-4"></td>
+              <td className="p-4 text-center">
+                <div className="h-12 flex items-end justify-center">
+                  .......................................................
+                </div>
+                <div className="text-[9pt] font-medium">(Nama)</div>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-4"></td>
+              <td className="p-4 text-center">
+                <div className="h-12 flex items-end justify-center">
+                  .......................................................
+                </div>
+                <div className="text-[9pt] font-medium leading-tight">
+                  (Jawatan)<br/>
+                  b.p. Ketua Setiausaha/<br/>
+                  Pegawai Pengawal
+                </div>
+              </td>
+            </tr>
+            
+            {/* PENDAHULUAN DIRI (DALAM JADUAL YANG SAMA ATAU ASING) */}
+            <tr>
+              <th colSpan={2} className="text-center py-2 uppercase font-bold tracking-widest text-[11pt] border-t-2 border-black">
+                PENDAHULUAN DIRI (JIKA ADA)
+              </th>
+            </tr>
+          </tbody>
         </table>
 
-        <div className="mt-20 flex justify-between px-10">
+        <table className="w-full border-t-0">
+          <tbody className="text-[10pt]">
+            <tr>
+              <td className="w-[70%] p-2">Pendahuluan Diri diberi</td>
+              <td className="w-[10%] text-center border-l-0">RM</td>
+              <td className="w-[20%] text-right p-2"></td>
+            </tr>
+            <tr>
+              <td className="p-2">Tolak: Tuntutan sekarang</td>
+              <td className="text-center border-l-0">RM</td>
+              <td className="text-right p-2">{grandTotal.toFixed(2)}</td>
+            </tr>
+            <tr className="font-bold">
+              <td className="p-2">Baki dituntut/Baki dibayar balik</td>
+              <td className="text-center border-l-0">RM</td>
+              <td className="text-right p-2">{nettTotal.toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div className="mt-10 flex justify-between px-4">
            <div className="text-center italic text-gray-400 text-[8pt]">Sistem e-Tuntutan Perjalanan WP1.4</div>
            <div className="text-center italic text-gray-400 text-[8pt]">Dicetak pada: {new Date().toLocaleString()}</div>
         </div>
