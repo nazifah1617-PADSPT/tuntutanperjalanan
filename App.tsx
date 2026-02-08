@@ -121,7 +121,8 @@ export default function App() {
                   TUNTUTAN BARU
                 </button>
                 <div className="h-px bg-slate-100 w-full my-2"></div>
-                {Object.values(allDrafts).sort((a,b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()).map(draft => (
+                {/* FIX: Cast Object.values(allDrafts) to DraftEntry[] to resolve 'unknown' type issues during sort and map operations */}
+                {(Object.values(allDrafts) as DraftEntry[]).sort((a,b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()).map(draft => (
                   <div key={draft.id} onClick={() => { setCurrentDraftId(draft.id); setFormData(draft.data); setIsDraftMenuOpen(false); setCurrentStep(0); }} className={`p-4 rounded-xl border transition-all cursor-pointer ${draft.id === currentDraftId ? 'border-blue-600 bg-blue-50/50' : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50'}`}>
                     <div className="font-bold text-xs text-slate-800 truncate uppercase tracking-tight">{draft.name || 'Draf Tanpa Nama'}</div>
                     <div className="text-[10px] text-slate-400 mt-1.5 font-semibold">{new Date(draft.lastUpdated).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
