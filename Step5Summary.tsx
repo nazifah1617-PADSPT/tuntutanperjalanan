@@ -270,65 +270,207 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 3: BAHAGIAN A */}
+        {/* MUKA SURAT 3: BAHAGIAN A (MENGIKUT FAIL PDF) */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[11pt] border-b-[1.5px] border-black bg-white">BAHAGIAN A</div>
           <div className="text-center font-bold py-1 uppercase text-[10pt] border-b-[1.5px] border-black bg-white">ELAUN PERJALANAN KENDERAAN</div>
           <table className="w-full border-collapse">
             <thead>
-              <tr className="text-[9pt]">
-                <th className="w-[18%] text-center border-r border-black font-bold">Jenis Kenderaan</th>
-                <th className="w-[16%] text-center border-r border-black font-bold">Kiraan Kilometer</th>
-                <th className="w-[20%] text-center border-r border-black font-bold">Jarak (KM)</th>
-                <th className="w-[22%] text-center border-r border-black font-bold">Kadar Sekilometer</th>
-                <th className="text-center font-bold">Jumlah (RM)</th>
+              <tr className="text-[8.5pt] font-bold text-center">
+                <th className="border-r border-black py-2 w-[18%]">Jenis Kenderaan</th>
+                <th className="border-r border-black py-2 w-[18%]">Kiraan Kilometer</th>
+                <th className="border-r border-black py-2 w-[18%]">Jarak (km)</th>
+                <th className="border-r border-black py-2 w-[28%]">Kadar Sekilometer</th>
+                <th className="py-2 w-[18%]">Jumlah (RM)</th>
               </tr>
             </thead>
             <tbody className="text-[9pt]">
-              <tr className="border-t border-black">
-                <td rowSpan={2} className="text-center align-middle font-bold border-r border-black uppercase">Kereta</td>
-                <td className="px-2 py-2 border-r border-black text-center">500 km pertama</td>
-                <td className="text-center border-r border-black font-bold">{isKereta ? km1.toFixed(2) : ''}</td>
-                <td className="text-center border-r border-black">RM {isKereta ? KADAR_KERETA.pertama.toFixed(2) : '0.85'} sen/km</td>
-                <td className="text-right px-2 font-bold">{isKereta ? amt1.toFixed(2) : ''}</td>
+              {/* BARIS KERETA */}
+              <tr>
+                <td rowSpan={2} className="text-center align-middle font-bold border-r border-t border-black uppercase">Kereta</td>
+                <td className="px-2 py-2 border-r border-t border-black">500 km pertama</td>
+                <td className="text-center border-r border-t border-black font-bold">{isKereta ? km1.toFixed(2) : '0'}</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.pertama.toFixed(2)} sen/km</td>
+                <td className="text-right px-2 border-t border-black font-bold">{isKereta ? amt1.toFixed(2) : '0.00'}</td>
               </tr>
-              <tr className="border-t border-black">
-                <td className="px-2 py-2 border-r border-black text-center">501 km seterusnya</td>
-                <td className="text-center border-r border-black font-bold">{isKereta ? km2.toFixed(2) : ''}</td>
-                <td className="text-center border-r border-black">RM {isKereta ? KADAR_KERETA.seterusnya.toFixed(2) : '0.75'} sen/km</td>
-                <td className="text-right px-2 font-bold">{isKereta ? amt2.toFixed(2) : ''}</td>
+              <tr>
+                <td className="px-2 py-2 border-r border-t border-black">501 km dan seterusnya</td>
+                <td className="text-center border-r border-t border-black font-bold">{isKereta ? km2.toFixed(2) : '0'}</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.seterusnya.toFixed(2)} sen/km</td>
+                <td className="text-right px-2 border-t border-black font-bold">{isKereta ? amt2.toFixed(2) : '0.00'}</td>
               </tr>
-              <tr className="border-t-[1.5px] border-black font-bold">
-                <td colSpan={4} className="text-right pr-4 py-2 uppercase text-[9.5pt]">Jumlah (Mileage)</td>
+              {/* BARIS MOTOSIKAL */}
+              <tr>
+                <td rowSpan={2} className="text-center align-middle font-bold border-r border-t border-black uppercase">Motosikal</td>
+                <td className="px-2 py-2 border-r border-t border-black">500 km pertama</td>
+                <td className="text-center border-r border-t border-black font-bold">{!isKereta ? km1.toFixed(2) : '0'}</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.pertama.toFixed(2)} sen/km</td>
+                <td className="text-right px-2 border-t border-black font-bold">{!isKereta ? amt1.toFixed(2) : '0.00'}</td>
+              </tr>
+              <tr>
+                <td className="px-2 py-2 border-r border-t border-black">501 km dan seterusnya</td>
+                <td className="text-center border-r border-t border-black font-bold">{!isKereta ? km2.toFixed(2) : '0'}</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.seterusnya.toFixed(2)} sen/km</td>
+                <td className="text-right px-2 border-t border-black font-bold">{!isKereta ? amt2.toFixed(2) : '0.00'}</td>
+              </tr>
+              <tr className="border-t-[1.5px] border-black font-bold bg-white">
+                <td colSpan={4} className="text-right pr-4 py-2 uppercase text-[9.5pt]">Jumlah</td>
                 <td className="text-right px-2 py-2 text-[9.5pt]">{mileageTotal.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
-          <div className="text-center font-bold py-1 uppercase text-[10pt] border-y-[1.5px] border-black bg-white">TAMBANG PENGANGKUTAN AWAM / MAKAN</div>
+
+          <div className="text-center font-bold py-1 uppercase text-[10pt] border-y-[1.5px] border-black bg-white">TUNTUTAN TAMBANG PENGANGKUTAN AWAM</div>
           <table className="w-full border-collapse">
-            <tbody className="text-[9.5pt]">
+            <tbody className="text-[9pt]">
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5 w-[80%]">Jumlah Tambang Pengangkutan Awam (Teksi/Bas/Lain-lain)</td>
+                <td className="px-4 py-1.5 w-[82%]">Teksi/Kereta Sewa [Resit <span className="font-bold border-b border-black px-4">{data.transport.teksi > 0 ? 'DISERTAKAN' : ' '}</span>]</td>
                 <td className="border-l border-black w-8 text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{transportTotal.toFixed(2)}</td>
+                <td className="border-l border-black text-right px-2 font-bold w-24">{data.transport.teksi > 0 ? data.transport.teksi.toFixed(2) : ''}</td>
               </tr>
               <tr className="border-b border-black">
-                <td className="px-4 py-1.5">Jumlah Elaun Makan (RM {mealTotal.toFixed(2)}) + Elaun Harian (RM {harianTotal.toFixed(2)})</td>
+                <td className="px-4 py-1.5">Bas [Resit <span className="font-bold border-b border-black px-4">{data.transport.bas > 0 ? 'DISERTAKAN' : ' '}</span>]</td>
                 <td className="border-l border-black text-center font-bold">RM</td>
-                <td className="border-l border-black text-right px-2 font-bold">{sectionAMealHarianTotal.toFixed(2)}</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.bas > 0 ? data.transport.bas.toFixed(2) : ''}</td>
               </tr>
-              <tr className="font-black bg-gray-50">
-                <td className="text-right pr-4 py-2 uppercase">JUMLAH (BAHAGIAN A)</td>
+              <tr className="border-b border-black">
+                <td className="px-4 py-1.5">Kereta Api [Resit <span className="font-bold border-b border-black px-4">{data.transport.keretaApi > 0 ? 'DISERTAKAN' : ' '}</span>]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.keretaApi > 0 ? data.transport.keretaApi.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-1.5">Feri [Resit <span className="font-bold border-b border-black px-4">{data.transport.feri > 0 ? 'DISERTAKAN' : ' '}</span>]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.feri > 0 ? data.transport.feri.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <td className="px-4 py-1.5">Lain-lain [Resit <span className="font-bold border-b border-black px-4">{data.transport.lainLain > 0 ? 'DISERTAKAN' : ' '}</span>]</td>
+                <td className="border-l border-black text-center font-bold">RM</td>
+                <td className="border-l border-black text-right px-2 font-bold">{data.transport.lainLain > 0 ? data.transport.lainLain.toFixed(2) : ''}</td>
+              </tr>
+              <tr className="font-bold bg-white">
+                <td className="text-right pr-4 py-2 uppercase">Jumlah</td>
                 <td className="border-l border-black text-center">RM</td>
-                <td className="border-l border-black text-right px-2">{partATotal.toFixed(2)}</td>
+                <td className="border-l border-black text-right px-2">{transportTotal.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
+
+          {/* ELAUN MAKAN / HARIAN (DUA KOLUM MENGIKUT PDF) */}
+          <div className="flex border-t-[1.5px] border-black text-[7.5pt] font-bold text-center">
+            <div className="w-1/2 border-r border-black py-2 px-1 uppercase leading-tight">TUNTUTAN ELAUN MAKAN/ ELAUN HARIAN<br/>(SEMENANJUNG MALAYSIA)</div>
+            <div className="w-1/2 py-2 px-1 uppercase leading-tight">TUNTUTAN ELAUN MAKAN/ ELAUN HARIAN<br/>(SABAH/ SARAWAK/ WP LABUAN)</div>
+          </div>
+          <div className="flex border-t border-black">
+            {/* KOLUM KIRI: SEMENANJUNG */}
+            <div className="w-1/2 border-r border-black flex flex-col">
+              <div className="text-center font-bold border-b border-black py-1 text-[8pt] uppercase">ELAUN MAKAN</div>
+              <table className="w-full border-none text-[8pt]">
+                <thead>
+                  <tr className="border-b border-black font-bold">
+                    <th className="border-r border-black text-left px-2 py-1 w-2/5">Bahagian Makan</th>
+                    <th className="border-r border-black py-1">Bil. Dituntut</th>
+                    <th className="border-r border-black py-1">Bil. Hari</th>
+                    <th className="py-1">RM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-black">
+                    <td className="border-r border-black px-2">Sarapan Pagi</td>
+                    <td className="border-r border-black text-center">{data.meals.sarapan.bil || ''}</td>
+                    <td className="border-r border-black text-center">{data.meals.sarapan.hari || ''}</td>
+                    <td className="text-right px-1 font-bold">{(data.meals.sarapan.bil * data.meals.sarapan.hari * data.meals.sarapan.kadar).toFixed(2)}</td>
+                  </tr>
+                  <tr className="border-b border-black">
+                    <td className="border-r border-black px-2">Makan Tengah Hari</td>
+                    <td className="border-r border-black text-center">{data.meals.makanTengahHari.bil || ''}</td>
+                    <td className="border-r border-black text-center">{data.meals.makanTengahHari.hari || ''}</td>
+                    <td className="text-right px-1 font-bold">{(data.meals.makanTengahHari.bil * data.meals.makanTengahHari.hari * data.meals.makanTengahHari.kadar).toFixed(2)}</td>
+                  </tr>
+                  <tr className="border-b border-black">
+                    <td className="border-r border-black px-2">Makan Malam</td>
+                    <td className="border-r border-black text-center">{data.meals.makanMalam.bil || ''}</td>
+                    <td className="border-r border-black text-center">{data.meals.makanMalam.hari || ''}</td>
+                    <td className="text-right px-1 font-bold">{(data.meals.makanMalam.bil * data.meals.makanMalam.hari * data.meals.makanMalam.kadar).toFixed(2)}</td>
+                  </tr>
+                  <tr className="font-bold bg-white">
+                    <td colSpan={3} className="text-right pr-2">Jumlah</td>
+                    <td className="text-right px-1">{mealTotal.toFixed(2)}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="p-2 text-[7.5pt] border-t border-black space-y-1">
+                <div>Elaun Makan x <span className="border-b border-black px-2 font-bold">{data.meals.sarapan.hari || ' '}</span> sebanyak RM <span className="border-b border-black px-2 font-bold">{data.meals.sarapan.kadar.toFixed(2)}</span> /hari</div>
+                <div className="font-bold">Jumlah (RM) <span className="border-b border-black px-4">{mealTotal.toFixed(2)}</span></div>
+              </div>
+              <div className="text-center font-bold border-y border-black py-1 text-[8pt] uppercase">ELAUN HARIAN</div>
+              <div className="p-2 text-[7.5pt] space-y-1">
+                <div>Elaun Harian x <span className="border-b border-black px-2 font-bold">{data.meals.harian.hari || ' '}</span> sebanyak RM <span className="border-b border-black px-2 font-bold">{data.meals.harian.kadar.toFixed(2)}</span> /hari</div>
+                <div className="font-bold">Jumlah (RM) <span className="border-b border-black px-4">{harianTotal.toFixed(2)}</span></div>
+              </div>
+              <div className="mt-auto border-t border-black font-black text-[9pt] p-2 flex justify-between bg-white">
+                <span>Jumlah (RM)</span>
+                <span>{sectionAMealHarianTotal.toFixed(2)}</span>
+              </div>
+            </div>
+
+            {/* KOLUM KANAN: SABAH/SARAWAK (KOSONG MENGIKUT SCREENSHOT) */}
+            <div className="w-1/2 flex flex-col">
+              <div className="text-center font-bold border-b border-black py-1 text-[8pt] uppercase">ELAUN MAKAN</div>
+              <table className="w-full border-none text-[8pt]">
+                <thead>
+                  <tr className="border-b border-black font-bold">
+                    <th className="border-r border-black text-left px-2 py-1 w-2/5">Bahagian Makan</th>
+                    <th className="border-r border-black py-1">Bil. Dituntut</th>
+                    <th className="border-r border-black py-1">Bil. Hari</th>
+                    <th className="py-1">RM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-black h-5">
+                    <td className="border-r border-black px-2">Sarapan Pagi</td>
+                    <td className="border-r border-black"></td><td className="border-r border-black"></td><td></td>
+                  </tr>
+                  <tr className="border-b border-black h-5">
+                    <td className="border-r border-black px-2">Makan Tengah Hari</td>
+                    <td className="border-r border-black"></td><td className="border-r border-black"></td><td></td>
+                  </tr>
+                  <tr className="border-b border-black h-5">
+                    <td className="border-r border-black px-2">Makan Malam</td>
+                    <td className="border-r border-black"></td><td className="border-r border-black"></td><td></td>
+                  </tr>
+                  <tr className="font-bold h-5"><td colSpan={3} className="text-right pr-2">Jumlah</td><td></td></tr>
+                </tbody>
+              </table>
+              <div className="p-2 text-[7.5pt] border-t border-black space-y-1">
+                <div>Elaun Makan x ________ sebanyak RM ________ /hari</div>
+                <div className="font-bold">Jumlah (RM) ________________</div>
+              </div>
+              <div className="text-center font-bold border-y border-black py-1 text-[8pt] uppercase">ELAUN HARIAN</div>
+              <div className="p-2 text-[7.5pt] space-y-1">
+                <div>Elaun Harian x ________ sebanyak RM ________ /hari</div>
+                <div className="font-bold">Jumlah (RM) ________________</div>
+              </div>
+              <div className="mt-auto border-t border-black font-black text-[9pt] p-2 flex justify-between bg-white">
+                <span>Jumlah (RM)</span>
+                <span>0.00</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex bg-white font-black text-[10pt] border-t-[1.5px] border-black">
+            <div className="flex-1 py-3 text-right pr-6 uppercase tracking-wider">JUMLAH (BAHAGIAN A)</div>
+            <div className="w-32 border-l border-black flex items-center justify-center">
+              <div className="w-8 border-r border-black flex items-center justify-center h-full">RM</div>
+              <div className="flex-1 text-right px-2">{partATotal.toFixed(2)}</div>
+            </div>
+          </div>
         </div>
+        <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi.</div>
 
         <div className="page-break"></div>
 
-        {/* MUKA SURAT 4: BAHAGIAN B (SUSUNAN KEMAS MENGIKUT SCREENSHOT) */}
+        {/* MUKA SURAT 4: BAHAGIAN B (KEKALKAN LOGIK SEDIA ADA) */}
         <div className="border-[1.5px] border-black">
           <div className="text-center font-bold py-2 uppercase text-[12pt] border-b-[1.5px] border-black bg-white tracking-[0.1em]">BAHAGIAN B</div>
           
@@ -406,7 +548,6 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
             </div>
           </div>
         </div>
-        <div className="text-[7.5pt] italic mt-1 font-bold text-gray-500">- Sila tambah ruangan jika tidak mencukupi</div>
 
         <div className="page-break"></div>
 
