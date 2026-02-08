@@ -1,12 +1,12 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { ClaimState, JourneyLog, HotelLodging } from './types';
 import { KADAR_KERETA, KADAR_MOTOSIKAL, KADAR_MAKAN } from './constants';
-import Step1OfficerInfo from './components/Step1OfficerInfo';
-import Step2JourneyLog from './components/Step2JourneyLog';
-import Step3PartA from './components/Step3PartA';
-import Step4PartB from './components/Step4PartB';
-import Step5Summary from './components/Step5Summary';
+import Step1OfficerInfo from './Step1OfficerInfo';
+import Step2JourneyLog from './Step2JourneyLog';
+import Step3PartA from './Step3PartA';
+import Step4PartB from './Step4PartB';
+import Step5Summary from './Step5Summary';
 
 const initialClaim: ClaimState = {
   info: {
@@ -71,8 +71,7 @@ export default function App() {
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
 
   return (
-    <div className="min-h-screen pb-20">
-      {/* Header */}
+    <div className="min-h-screen pb-20 bg-gray-50">
       <header className="bg-blue-900 text-white p-6 shadow-lg mb-8">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div>
@@ -86,7 +85,6 @@ export default function App() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4">
-        {/* Steper */}
         <div className="flex flex-wrap gap-4 mb-8 justify-center overflow-x-auto py-2">
           {STEPS.map((step, idx) => (
             <div key={idx} className="flex items-center">
@@ -104,7 +102,6 @@ export default function App() {
           ))}
         </div>
 
-        {/* Form Content */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-24 transition-all duration-300">
           {currentStep === 0 && <Step1OfficerInfo info={formData.info} onChange={updateInfo} />}
           {currentStep === 1 && <Step2JourneyLog logs={formData.logs} onChange={updateLogs} />}
@@ -129,7 +126,6 @@ export default function App() {
         </div>
       </main>
 
-      {/* Persistent Navigation Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <button 
