@@ -1,7 +1,7 @@
 
 export const KADAR_KERETA = {
-  pertama: 0.85, // sen/km for first 500
-  seterusnya: 0.75 // sen/km for 501 onwards
+  pertama: 0.90, // sen/km for first 500
+  seterusnya: 0.80 // sen/km for 501 onwards
 };
 
 export const KADAR_MOTOSIKAL = {

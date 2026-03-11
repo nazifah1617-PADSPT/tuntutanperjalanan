@@ -297,26 +297,26 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                 <td rowSpan={2} className="text-center align-middle font-bold border-r border-t border-black uppercase">Kereta</td>
                 <td className="px-2 py-2 border-r border-t border-black">500 km pertama</td>
                 <td className="text-center border-r border-t border-black font-bold">{isKereta ? km1.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.pertama.toFixed(2)} sen/km</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.pertama.toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{isKereta ? amt1.toFixed(2) : '0.00'}</td>
               </tr>
               <tr>
                 <td className="px-2 py-2 border-r border-t border-black">501 km dan seterusnya</td>
                 <td className="text-center border-r border-t border-black font-bold">{isKereta ? km2.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.seterusnya.toFixed(2)} sen/km</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.seterusnya.toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{isKereta ? amt2.toFixed(2) : '0.00'}</td>
               </tr>
               <tr>
                 <td rowSpan={2} className="text-center align-middle font-bold border-r border-t border-black uppercase">Motosikal</td>
                 <td className="px-2 py-2 border-r border-t border-black">500 km pertama</td>
                 <td className="text-center border-r border-t border-black font-bold">{!isKereta ? km1.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.pertama.toFixed(2)} sen/km</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.pertama.toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{!isKereta ? amt1.toFixed(2) : '0.00'}</td>
               </tr>
               <tr>
                 <td className="px-2 py-2 border-r border-t border-black">501 km dan seterusnya</td>
                 <td className="text-center border-r border-t border-black font-bold">{!isKereta ? km2.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.seterusnya.toFixed(2)} sen/km</td>
+                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.seterusnya.toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{!isKereta ? amt2.toFixed(2) : '0.00'}</td>
               </tr>
               <tr className="border-t-[1.5px] border-black font-bold bg-white">
