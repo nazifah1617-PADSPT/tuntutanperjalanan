@@ -27,6 +27,8 @@ export interface JourneyLeg {
   tol: number;
   tolMasuk?: string;
   tolKeluar?: string;
+  tolMasuk2?: string;
+  tolKeluar2?: string;
 }
 
 export interface JourneyGroup {

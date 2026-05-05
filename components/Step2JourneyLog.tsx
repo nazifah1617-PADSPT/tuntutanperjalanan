@@ -15,8 +15,8 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
       tarikh: logs.length > 0 ? logs[logs.length - 1].tarikh : '',
       tujuan: '',
       adaBalik: true,
-      pergi: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: 'Pejabat', ke: '', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '' },
-      balik: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: '', ke: 'Pejabat', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '' }
+      pergi: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: 'Pejabat', ke: '', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '', tolMasuk2: '', tolKeluar2: '' },
+      balik: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: '', ke: 'Pejabat', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '', tolMasuk2: '', tolKeluar2: '' }
     };
     onChange([...logs, newJourney]);
   };
@@ -152,6 +152,16 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
                       <input type="text" placeholder="Nama Tol" value={journey.pergi.tolKeluar || ''} onChange={(e) => updateLeg(journey.id, 'pergi', 'tolKeluar', e.target.value)} className={inputClass} />
                     </div>
                   </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelClass}>Tol Masuk 2</label>
+                      <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.pergi.tolMasuk2 || ''} onChange={(e) => updateLeg(journey.id, 'pergi', 'tolMasuk2', e.target.value)} className={inputClass} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Tol Keluar 2</label>
+                      <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.pergi.tolKeluar2 || ''} onChange={(e) => updateLeg(journey.id, 'pergi', 'tolKeluar2', e.target.value)} className={inputClass} />
+                    </div>
+                  </div>
 
                   <div className="flex gap-4">
                     <div className="w-1/2">
@@ -218,6 +228,16 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
                         <div>
                           <label className={labelClass}>Tol Keluar</label>
                           <input type="text" placeholder="Nama Tol" value={journey.balik.tolKeluar || ''} onChange={(e) => updateLeg(journey.id, 'balik', 'tolKeluar', e.target.value)} className={inputClass} />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className={labelClass}>Tol Masuk 2</label>
+                          <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.balik.tolMasuk2 || ''} onChange={(e) => updateLeg(journey.id, 'balik', 'tolMasuk2', e.target.value)} className={inputClass} />
+                        </div>
+                        <div>
+                          <label className={labelClass}>Tol Keluar 2</label>
+                          <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.balik.tolKeluar2 || ''} onChange={(e) => updateLeg(journey.id, 'balik', 'tolKeluar2', e.target.value)} className={inputClass} />
                         </div>
                       </div>
 

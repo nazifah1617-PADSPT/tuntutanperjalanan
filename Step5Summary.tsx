@@ -247,7 +247,9 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                     <div className="text-[8pt] mb-1 italic">Dari {j.pergi.dari} ke {j.pergi.ke}</div>
                     {(Number(j.pergi.tol) > 0) && (
                       <div className="text-[7.5pt] text-blue-700 mt-2">
-                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'} (RM {(Number(j.pergi.tol)||0).toFixed(2)})
+                        <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.pergi.tolMasuk || '-'} &rarr; {j.pergi.tolKeluar || '-'}
+                        {j.pergi.tolMasuk2 && j.pergi.tolKeluar2 && `, ${j.pergi.tolMasuk2} \u2192 ${j.pergi.tolKeluar2}`}
+                        {' '}(RM {(Number(j.pergi.tol)||0).toFixed(2)})
                       </div>
                     )}
                   </td>
@@ -261,7 +263,9 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                       <div className="text-[8pt] mb-1 italic">Dari {j.balik.dari} ke {j.balik.ke}</div>
                       {(Number(j.balik.tol) > 0) && (
                         <div className="text-[7.5pt] text-amber-700 mt-2">
-                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'} (RM {(Number(j.balik.tol)||0).toFixed(2)})
+                          <span className="font-bold uppercase tracking-tighter">Butiran Tol:</span> {j.balik.tolMasuk || '-'} &rarr; {j.balik.tolKeluar || '-'}
+                          {j.balik.tolMasuk2 && j.balik.tolKeluar2 && `, ${j.balik.tolMasuk2} \u2192 ${j.balik.tolKeluar2}`}
+                          {' '}(RM {(Number(j.balik.tol)||0).toFixed(2)})
                         </div>
                       )}
                     </td>
