@@ -73,6 +73,13 @@ export interface MiscExpenses {
   kemasukanPremis: number;
 }
 
+export interface MileageRates {
+  keretaPertama: number;
+  keretaSeterusnya: number;
+  motosikalPertama: number;
+  motosikalSeterusnya: number;
+}
+
 export interface ClaimState {
   info: OfficerInfo;
   logs: JourneyGroup[];
@@ -81,4 +88,5 @@ export interface ClaimState {
   lodgings: HotelLodging[];
   misc: MiscExpenses;
   advance: number;
+  mileageRates?: MileageRates;
 }

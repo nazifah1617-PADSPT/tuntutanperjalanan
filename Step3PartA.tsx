@@ -1,17 +1,18 @@
 import React, { useMemo } from 'react';
-import { JourneyGroup, PublicTransport, MealAllowance } from './types';
-import { KADAR_KERETA, KADAR_MOTOSIKAL } from './constants';
+import { JourneyGroup, PublicTransport, MealAllowance, MileageRates } from './types';
 
 interface Props {
   logs: JourneyGroup[];
   vehicleType: 'Kereta' | 'Motosikal';
   transport: PublicTransport;
   meals: MealAllowance;
+  mileageRates: MileageRates;
   onTransportChange: (val: Partial<PublicTransport>) => void;
   onMealsChange: (val: Partial<MealAllowance>) => void;
+  onMileageRatesChange: (val: Partial<MileageRates>) => void;
 }
 
-const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTransportChange, onMealsChange }) => {
+const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, mileageRates, onTransportChange, onMealsChange, onMileageRatesChange }) => {
   // Kira total KM dari semua kad (Pergi + Balik)
   const totalKm = logs.reduce((sum, j) => {
     const kmPergi = j.pergi.jarak || 0;
@@ -19,15 +20,21 @@ const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTr
     return sum + kmPergi + kmBalik;
   }, 0);
 
-  const kadar = vehicleType === 'Kereta' ? KADAR_KERETA : KADAR_MOTOSIKAL;
+  const kadarPertama = vehicleType === 'Kereta' ? mileageRates.keretaPertama : mileageRates.motosikalPertama;
+  const kadarSeterusnya = vehicleType === 'Kereta' ? mileageRates.keretaSeterusnya : mileageRates.motosikalSeterusnya;
 
   const mileageCalc = useMemo(() => {
     let km1 = Math.min(totalKm, 500);
     let km2 = Math.max(0, totalKm - 500);
-    let amt1 = km1 * kadar.pertama;
-    let amt2 = km2 * kadar.seterusnya;
+    let amt1 = km1 * kadarPertama;
+    let amt2 = km2 * kadarSeterusnya;
     return { km1, km2, amt1, amt2, total: amt1 + amt2 };
-  }, [totalKm, kadar]);
+  }, [totalKm, kadarPertama, kadarSeterusnya]);
+
+  const handleRateChange = (field: 'Pertama' | 'Seterusnya', value: string) => {
+    const key = vehicleType === 'Kereta' ? `kereta${field}` : `motosikal${field}`;
+    onMileageRatesChange({ [key]: parseFloat(value) || 0 });
+  };
 
   const handleTransport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,6 +63,7 @@ const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTr
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Kiraan Kilometer</th>
                 <th className="px-4 py-3 text-center text-xs font-bold text-gray-500 uppercase">Jarak (KM)</th>
+                <th className="px-4 py-3 text-center text-xs font-bold text-gray-500 uppercase">Kadar (RM / km)</th>
                 <th className="px-4 py-3 text-right text-xs font-bold text-gray-500 uppercase">Jumlah (RM)</th>
               </tr>
             </thead>
@@ -63,15 +71,21 @@ const Step3PartA: React.FC<Props> = ({ logs, vehicleType, transport, meals, onTr
               <tr>
                 <td className="px-4 py-3 text-sm">500 km pertama</td>
                 <td className="px-4 py-3 text-center text-sm">{mileageCalc.km1.toFixed(2)}</td>
+                <td className="px-4 py-2 text-center">
+                  <input type="number" step="0.01" value={kadarPertama} onChange={(e) => handleRateChange('Pertama', e.target.value)} className="w-20 border rounded p-1 text-center" />
+                </td>
                 <td className="px-4 py-3 text-right text-sm font-bold">RM {mileageCalc.amt1.toFixed(2)}</td>
               </tr>
               <tr>
                 <td className="px-4 py-3 text-sm">501 km seterusnya</td>
                 <td className="px-4 py-3 text-center text-sm">{mileageCalc.km2.toFixed(2)}</td>
+                <td className="px-4 py-2 text-center">
+                  <input type="number" step="0.01" value={kadarSeterusnya} onChange={(e) => handleRateChange('Seterusnya', e.target.value)} className="w-20 border rounded p-1 text-center" />
+                </td>
                 <td className="px-4 py-3 text-right text-sm font-bold">RM {mileageCalc.amt2.toFixed(2)}</td>
               </tr>
               <tr className="bg-blue-50">
-                <td colSpan={2} className="px-4 py-3 text-sm font-bold text-blue-900 text-right uppercase">Jumlah Mileage</td>
+                <td colSpan={3} className="px-4 py-3 text-sm font-bold text-blue-900 text-right uppercase">Jumlah Mileage</td>
                 <td className="px-4 py-3 text-right text-sm font-bold text-blue-900">RM {mileageCalc.total.toFixed(2)}</td>
               </tr>
             </tbody>

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ClaimState, JourneyGroup, HotelLodging } from './types';
-import { KADAR_MAKAN } from './constants';
+import { KADAR_MAKAN, KADAR_KERETA, KADAR_MOTOSIKAL } from './constants';
 import { persistence, DraftEntry } from './persistence';
 import { auth, onAuthStateChanged, signOut } from './firebase';
 import Step1OfficerInfo from './Step1OfficerInfo';
@@ -27,7 +27,13 @@ const initialClaim: ClaimState = {
   },
   lodgings: [],
   misc: { telefon: 0, pos: 0, dobi: 0, airportTax: 0, lebihanBagasi: 0, parking: 0, tol: 0, saringan: 0, kemasukanPremis: 0 },
-  advance: 0
+  advance: 0,
+  mileageRates: {
+    keretaPertama: KADAR_KERETA.pertama,
+    keretaSeterusnya: KADAR_KERETA.seterusnya,
+    motosikalPertama: KADAR_MOTOSIKAL.pertama,
+    motosikalSeterusnya: KADAR_MOTOSIKAL.seterusnya,
+  }
 };
 
 const STEPS = [
@@ -65,7 +71,10 @@ export default function App() {
         const lastId = Object.keys(data).sort((a, b) => new Date(data[b].lastUpdated).getTime() - new Date(data[a].lastUpdated).getTime())[0];
         if (lastId) {
           setCurrentDraftId(lastId);
-          setFormData(data[lastId].data);
+          setFormData({
+            ...data[lastId].data,
+            mileageRates: data[lastId].data.mileageRates || initialClaim.mileageRates
+          });
         }
         setSaveStatus('saved');
       };
@@ -123,7 +132,7 @@ export default function App() {
                 <div className="h-px bg-slate-100 w-full my-2"></div>
                 {/* FIX: Cast Object.values(allDrafts) to DraftEntry[] to resolve 'unknown' type issues during sort and map operations */}
                 {(Object.values(allDrafts) as DraftEntry[]).sort((a,b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()).map(draft => (
-                  <div key={draft.id} onClick={() => { setCurrentDraftId(draft.id); setFormData(draft.data); setIsDraftMenuOpen(false); setCurrentStep(0); }} className={`p-4 rounded-xl border transition-all cursor-pointer ${draft.id === currentDraftId ? 'border-blue-600 bg-blue-50/50' : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50'}`}>
+                  <div key={draft.id} onClick={() => { setCurrentDraftId(draft.id); setFormData({...draft.data, mileageRates: draft.data.mileageRates || initialClaim.mileageRates}); setIsDraftMenuOpen(false); setCurrentStep(0); }} className={`p-4 rounded-xl border transition-all cursor-pointer ${draft.id === currentDraftId ? 'border-blue-600 bg-blue-50/50' : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50'}`}>
                     <div className="font-bold text-xs text-slate-800 truncate uppercase tracking-tight">{draft.name || 'Draf Tanpa Nama'}</div>
                     <div className="text-[10px] text-slate-400 mt-1.5 font-semibold">{new Date(draft.lastUpdated).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
                   </div>
@@ -196,7 +205,7 @@ export default function App() {
           <div className="p-8 md:p-12 lg:p-16">
             {currentStep === 0 && <Step1OfficerInfo info={formData.info} onChange={(i) => setFormData(p => ({ ...p, info: { ...p.info, ...i } }))} />}
             {currentStep === 1 && <Step2JourneyLog logs={formData.logs} onChange={(l) => setFormData(p => ({ ...p, logs: l }))} />}
-            {currentStep === 2 && <Step3PartA logs={formData.logs} vehicleType={formData.info.kenderaanJenis} transport={formData.transport} meals={formData.meals} onTransportChange={(t) => setFormData(p => ({ ...p, transport: { ...p.transport, ...t } }))} onMealsChange={(m) => setFormData(p => ({ ...p, meals: { ...p.meals, ...m } }))} />}
+            {currentStep === 2 && <Step3PartA logs={formData.logs} vehicleType={formData.info.kenderaanJenis} transport={formData.transport} meals={formData.meals} mileageRates={formData.mileageRates!} onTransportChange={(t) => setFormData(p => ({ ...p, transport: { ...p.transport, ...t } }))} onMealsChange={(m) => setFormData(p => ({ ...p, meals: { ...p.meals, ...m } }))} onMileageRatesChange={(mr) => setFormData(p => ({ ...p, mileageRates: { ...p.mileageRates!, ...mr } }))} />}
             {currentStep === 3 && <Step4PartB lodgings={formData.lodgings} onChange={(l) => setFormData(p => ({ ...p, lodgings: l }))} />}
             {currentStep === 4 && <Step5Summary data={formData} onMiscChange={(m) => setFormData(p => ({ ...p, misc: { ...p.misc, ...m } }))} onAdvanceChange={(a) => setFormData(p => ({ ...p, advance: a }))} />}
           </div>

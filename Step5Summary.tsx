@@ -47,12 +47,13 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
   const totalTolLogs = data.logs.reduce((sum, j) => sum + (Number(j.pergi.tol) || 0) + (j.adaBalik ? (Number(j.balik.tol) || 0) : 0), 0);
   
   const isKereta = data.info.kenderaanJenis === 'Kereta';
-  const kadar = isKereta ? KADAR_KERETA : KADAR_MOTOSIKAL;
+  const kadarPertama = isKereta ? data.mileageRates!.keretaPertama : data.mileageRates!.motosikalPertama;
+  const kadarSeterusnya = isKereta ? data.mileageRates!.keretaSeterusnya : data.mileageRates!.motosikalSeterusnya;
   
   const km1 = Math.min(totalKm, 500);
   const km2 = Math.max(0, totalKm - 500);
-  const amt1 = km1 * kadar.pertama;
-  const amt2 = km2 * kadar.seterusnya;
+  const amt1 = km1 * kadarPertama;
+  const amt2 = km2 * kadarSeterusnya;
   const mileageTotal = amt1 + amt2;
 
   const transportTotal = (Number(data.transport.teksi) || 0) + (Number(data.transport.bas) || 0) + (Number(data.transport.keretaApi) || 0) + (Number(data.transport.feri) || 0) + (Number(data.transport.lainLain) || 0);
@@ -297,26 +298,26 @@ const Step5Summary: React.FC<Props> = ({ data, onMiscChange, onAdvanceChange }) 
                 <td rowSpan={2} className="text-center align-middle font-bold border-r border-t border-black uppercase">Kereta</td>
                 <td className="px-2 py-2 border-r border-t border-black">500 km pertama</td>
                 <td className="text-center border-r border-t border-black font-bold">{isKereta ? km1.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.pertama.toFixed(2)} / km</td>
+                <td className="text-center border-r border-t border-black">RM {(data.mileageRates?.keretaPertama || 0).toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{isKereta ? amt1.toFixed(2) : '0.00'}</td>
               </tr>
               <tr>
                 <td className="px-2 py-2 border-r border-t border-black">501 km dan seterusnya</td>
                 <td className="text-center border-r border-t border-black font-bold">{isKereta ? km2.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_KERETA.seterusnya.toFixed(2)} / km</td>
+                <td className="text-center border-r border-t border-black">RM {(data.mileageRates?.keretaSeterusnya || 0).toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{isKereta ? amt2.toFixed(2) : '0.00'}</td>
               </tr>
               <tr>
                 <td rowSpan={2} className="text-center align-middle font-bold border-r border-t border-black uppercase">Motosikal</td>
                 <td className="px-2 py-2 border-r border-t border-black">500 km pertama</td>
                 <td className="text-center border-r border-t border-black font-bold">{!isKereta ? km1.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.pertama.toFixed(2)} / km</td>
+                <td className="text-center border-r border-t border-black">RM {(data.mileageRates?.motosikalPertama || 0).toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{!isKereta ? amt1.toFixed(2) : '0.00'}</td>
               </tr>
               <tr>
                 <td className="px-2 py-2 border-r border-t border-black">501 km dan seterusnya</td>
                 <td className="text-center border-r border-t border-black font-bold">{!isKereta ? km2.toFixed(2) : '0'}</td>
-                <td className="text-center border-r border-t border-black">RM {KADAR_MOTOSIKAL.seterusnya.toFixed(2)} / km</td>
+                <td className="text-center border-r border-t border-black">RM {(data.mileageRates?.motosikalSeterusnya || 0).toFixed(2)} / km</td>
                 <td className="text-right px-2 border-t border-black font-bold">{!isKereta ? amt2.toFixed(2) : '0.00'}</td>
               </tr>
               <tr className="border-t-[1.5px] border-black font-bold bg-white">
