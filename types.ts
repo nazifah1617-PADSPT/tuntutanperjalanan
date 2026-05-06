@@ -16,6 +16,13 @@ export interface OfficerInfo {
   alamatRumah: string;
 }
 
+export interface TollEntry {
+  id: string;
+  tolMasuk: string;
+  tolKeluar: string;
+  amaun: number;
+}
+
 export interface JourneyLeg {
   waktuBertolak: string;
   waktuSampai: string;
@@ -29,6 +36,7 @@ export interface JourneyLeg {
   tolKeluar?: string;
   tolMasuk2?: string;
   tolKeluar2?: string;
+  senaraiTol: TollEntry[];
 }
 
 export interface JourneyGroup {

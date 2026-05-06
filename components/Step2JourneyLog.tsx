@@ -15,10 +15,67 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
       tarikh: logs.length > 0 ? logs[logs.length - 1].tarikh : '',
       tujuan: '',
       adaBalik: true,
-      pergi: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: 'Pejabat', ke: '', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '', tolMasuk2: '', tolKeluar2: '' },
-      balik: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: '', ke: 'Pejabat', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '', tolMasuk2: '', tolKeluar2: '' }
+      pergi: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: 'Pejabat', ke: '', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '', tolMasuk2: '', tolKeluar2: '', senaraiTol: [] },
+      balik: { waktuBertolak: '', waktuSampai: '', tempohJam: 0, tempohMinit: 0, dari: '', ke: 'Pejabat', jarak: 0, tol: 0, tolMasuk: '', tolKeluar: '', tolMasuk2: '', tolKeluar2: '', senaraiTol: [] }
     };
     onChange([...logs, newJourney]);
+  };
+
+  const addToll = (id: string, legType: 'pergi' | 'balik') => {
+    onChange(logs.map(j => {
+      if (j.id === id) {
+        const currentLeg = j[legType];
+        const currentTolls = currentLeg.senaraiTol || [];
+        return {
+          ...j,
+          [legType]: {
+            ...currentLeg,
+            senaraiTol: [...currentTolls, { id: Math.random().toString(36).substr(2, 9), tolMasuk: '', tolKeluar: '', amaun: 0 }]
+          }
+        };
+      }
+      return j;
+    }));
+  };
+
+  const updateTollField = (id: string, legType: 'pergi' | 'balik', tollId: string, field: 'tolMasuk' | 'tolKeluar' | 'amaun', value: any) => {
+    onChange(logs.map(j => {
+      if (j.id === id) {
+        const currentLeg = j[legType];
+        const currentTolls = currentLeg.senaraiTol || [];
+        const newTolls = currentTolls.map(t => t.id === tollId ? { ...t, [field]: value } : t);
+        const newTotal = newTolls.reduce((sum, t) => sum + (Number(t.amaun) || 0), 0);
+        return {
+          ...j,
+          [legType]: {
+            ...currentLeg,
+            senaraiTol: newTolls,
+            tol: newTotal > 0 || currentTolls.length > 0 ? newTotal : currentLeg.tol
+          }
+        };
+      }
+      return j;
+    }));
+  };
+
+  const removeToll = (id: string, legType: 'pergi' | 'balik', tollId: string) => {
+    onChange(logs.map(j => {
+      if (j.id === id) {
+        const currentLeg = j[legType];
+        const currentTolls = currentLeg.senaraiTol || [];
+        const newTolls = currentTolls.filter(t => t.id !== tollId);
+        const newTotal = newTolls.reduce((sum, t) => sum + (Number(t.amaun) || 0), 0);
+        return {
+          ...j,
+          [legType]: {
+            ...currentLeg,
+            senaraiTol: newTolls,
+            tol: newTotal
+          }
+        };
+      }
+      return j;
+    }));
   };
 
   // Helper to calculate estimated arrival time based on departure and duration
@@ -142,31 +199,43 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className={labelClass}>Tol Masuk</label>
-                      <input type="text" placeholder="Nama Tol" value={journey.pergi.tolMasuk || ''} onChange={(e) => updateLeg(journey.id, 'pergi', 'tolMasuk', e.target.value)} className={inputClass} />
+                  <div className="space-y-3 pt-2">
+                    <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                      <label className={`${labelClass} mb-0`}>Senarai Tol</label>
+                      <button type="button" onClick={() => addToll(journey.id, 'pergi')} className="text-xs text-blue-600 font-bold hover:underline flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" /></svg>
+                        Tambah Tol
+                      </button>
                     </div>
-                    <div>
-                      <label className={labelClass}>Tol Keluar</label>
-                      <input type="text" placeholder="Nama Tol" value={journey.pergi.tolKeluar || ''} onChange={(e) => updateLeg(journey.id, 'pergi', 'tolKeluar', e.target.value)} className={inputClass} />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className={labelClass}>Tol Masuk 2</label>
-                      <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.pergi.tolMasuk2 || ''} onChange={(e) => updateLeg(journey.id, 'pergi', 'tolMasuk2', e.target.value)} className={inputClass} />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Tol Keluar 2</label>
-                      <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.pergi.tolKeluar2 || ''} onChange={(e) => updateLeg(journey.id, 'pergi', 'tolKeluar2', e.target.value)} className={inputClass} />
-                    </div>
+                    {(journey.pergi.senaraiTol || []).map((t, tIdx) => (
+                      <div key={t.id} className="grid grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <div className="col-span-1 text-center text-[10px] font-black text-slate-400">#{tIdx + 1}</div>
+                        <div className="col-span-4">
+                          <input type="text" placeholder="Tol Masuk" value={t.tolMasuk} onChange={e => updateTollField(journey.id, 'pergi', t.id, 'tolMasuk', e.target.value)} className={`${inputClass} !py-1.5`} />
+                        </div>
+                        <div className="col-span-4">
+                          <input type="text" placeholder="Tol Keluar" value={t.tolKeluar} onChange={e => updateTollField(journey.id, 'pergi', t.id, 'tolKeluar', e.target.value)} className={`${inputClass} !py-1.5`} />
+                        </div>
+                        <div className="col-span-2">
+                          <input type="number" step="0.01" placeholder="RM" value={t.amaun || ''} onChange={e => updateTollField(journey.id, 'pergi', t.id, 'amaun', parseFloat(e.target.value) || 0)} className={`${inputClass} !py-1.5 text-center`} />
+                        </div>
+                        <div className="col-span-1 text-center">
+                          <button type="button" onClick={() => removeToll(journey.id, 'pergi', t.id)} className="text-slate-300 hover:text-red-500 transition-colors">
+                            <svg className="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {(!journey.pergi.senaraiTol || journey.pergi.senaraiTol.length === 0) && (
+                      <div className="text-[11px] text-slate-400 italic text-center py-2 bg-slate-50 rounded-lg border border-dashed border-slate-200">Tiada rekod tol.</div>
+                    )}
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 pt-2">
                     <div className="w-1/2">
                       <label className={labelClass}>Jumlah Tol (RM)</label>
                       <input type="number" step="0.01" value={journey.pergi.tol} onChange={(e) => updateLeg(journey.id, 'pergi', 'tol', parseFloat(e.target.value) || 0)} className={`${inputClass} text-right font-bold text-blue-600`} />
+                      <p className="text-[9px] text-slate-400 mt-1">*Dikira automatik jika ada senarai tol</p>
                     </div>
                     <div className="w-1/2">
                       <label className={labelClass}>Jarak (KM)</label>
@@ -220,31 +289,43 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className={labelClass}>Tol Masuk</label>
-                          <input type="text" placeholder="Nama Tol" value={journey.balik.tolMasuk || ''} onChange={(e) => updateLeg(journey.id, 'balik', 'tolMasuk', e.target.value)} className={inputClass} />
+                      <div className="space-y-3 pt-2">
+                        <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                          <label className={`${labelClass} mb-0`}>Senarai Tol</label>
+                          <button type="button" onClick={() => addToll(journey.id, 'balik')} className="text-xs text-blue-600 font-bold hover:underline flex items-center gap-1">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" /></svg>
+                            Tambah Tol
+                          </button>
                         </div>
-                        <div>
-                          <label className={labelClass}>Tol Keluar</label>
-                          <input type="text" placeholder="Nama Tol" value={journey.balik.tolKeluar || ''} onChange={(e) => updateLeg(journey.id, 'balik', 'tolKeluar', e.target.value)} className={inputClass} />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className={labelClass}>Tol Masuk 2</label>
-                          <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.balik.tolMasuk2 || ''} onChange={(e) => updateLeg(journey.id, 'balik', 'tolMasuk2', e.target.value)} className={inputClass} />
-                        </div>
-                        <div>
-                          <label className={labelClass}>Tol Keluar 2</label>
-                          <input type="text" placeholder="Nama Tol 2 (Pilihan)" value={journey.balik.tolKeluar2 || ''} onChange={(e) => updateLeg(journey.id, 'balik', 'tolKeluar2', e.target.value)} className={inputClass} />
-                        </div>
+                        {(journey.balik.senaraiTol || []).map((t, tIdx) => (
+                          <div key={t.id} className="grid grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            <div className="col-span-1 text-center text-[10px] font-black text-slate-400">#{tIdx + 1}</div>
+                            <div className="col-span-4">
+                              <input type="text" placeholder="Tol Masuk" value={t.tolMasuk} onChange={e => updateTollField(journey.id, 'balik', t.id, 'tolMasuk', e.target.value)} className={`${inputClass} !py-1.5`} />
+                            </div>
+                            <div className="col-span-4">
+                              <input type="text" placeholder="Tol Keluar" value={t.tolKeluar} onChange={e => updateTollField(journey.id, 'balik', t.id, 'tolKeluar', e.target.value)} className={`${inputClass} !py-1.5`} />
+                            </div>
+                            <div className="col-span-2">
+                              <input type="number" step="0.01" placeholder="RM" value={t.amaun || ''} onChange={e => updateTollField(journey.id, 'balik', t.id, 'amaun', parseFloat(e.target.value) || 0)} className={`${inputClass} !py-1.5 text-center`} />
+                            </div>
+                            <div className="col-span-1 text-center">
+                              <button type="button" onClick={() => removeToll(journey.id, 'balik', t.id)} className="text-slate-300 hover:text-red-500 transition-colors">
+                                <svg className="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                        {(!journey.balik.senaraiTol || journey.balik.senaraiTol.length === 0) && (
+                          <div className="text-[11px] text-slate-400 italic text-center py-2 bg-slate-50 rounded-lg border border-dashed border-slate-200">Tiada rekod tol.</div>
+                        )}
                       </div>
 
-                      <div className="flex gap-4">
+                      <div className="flex gap-4 pt-2">
                         <div className="w-1/2">
                           <label className={labelClass}>Jumlah Tol (RM)</label>
                           <input type="number" step="0.01" value={journey.balik.tol} onChange={(e) => updateLeg(journey.id, 'balik', 'tol', parseFloat(e.target.value) || 0)} className={`${inputClass} text-right font-bold text-blue-600`} />
+                          <p className="text-[9px] text-slate-400 mt-1">*Dikira automatik jika ada senarai tol</p>
                         </div>
                         <div className="w-1/2">
                           <label className={labelClass}>Jarak (KM)</label>
