@@ -44,7 +44,7 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
         const currentLeg = j[legType];
         const currentTolls = currentLeg.senaraiTol || [];
         const newTolls = currentTolls.map(t => t.id === tollId ? { ...t, [field]: value } : t);
-        const newTotal = newTolls.reduce((sum, t) => sum + (Number(t.amaun) || 0), 0);
+        const newTotal = Math.round(newTolls.reduce((sum, t) => sum + (Number(t.amaun) || 0), 0) * 100) / 100;
         return {
           ...j,
           [legType]: {
@@ -64,7 +64,7 @@ const Step2JourneyLog: React.FC<Props> = ({ logs, onChange }) => {
         const currentLeg = j[legType];
         const currentTolls = currentLeg.senaraiTol || [];
         const newTolls = currentTolls.filter(t => t.id !== tollId);
-        const newTotal = newTolls.reduce((sum, t) => sum + (Number(t.amaun) || 0), 0);
+        const newTotal = Math.round(newTolls.reduce((sum, t) => sum + (Number(t.amaun) || 0), 0) * 100) / 100;
         return {
           ...j,
           [legType]: {
